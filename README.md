@@ -458,7 +458,7 @@ Provides runtime UI for:
 - "End Turn" button integration
 
 ## 🧭 System Architecture Diagram
-```mermaid
+```
                  ┌──────────────────────────┐
                  │      TacticalCamera      │
                  │ (auto focus & zoom)      │
