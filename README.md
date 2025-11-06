@@ -17,7 +17,7 @@ Contains all logic for:
 - Player movement  
 - Gold, input, and camera systems
 
----
+--- 
 
 ## 🧩 Core Architecture
 
@@ -50,152 +50,113 @@ All systems remain decoupled—allowing easy modification, extension, and testin
 ```csharp
 PlayerEvents.DisablePlayerMovement(); // freeze player movement during dialogue
 QuestEvents.StartQuest("CollectCoinsQuest");
-3. Input System
-InputManager.cs + InputEvents.cs
+```
 
-Acts as a bridge between Unity’s PlayerInput component and the event system.
+### 3. Input System
+**`InputManager.cs`** + **`InputEvents.cs`**
+
+Acts as a bridge between Unity's PlayerInput component and the event system.
 
 Handles:
-
-Movement input (WASD or Arrow keys)
-
-Submit (confirm)
-
-Quest Log toggle
+- Movement input (WASD or Arrow keys)
+- Submit (confirm)
+- Quest Log toggle
 
 Input contexts (e.g., DEFAULT vs DIALOGUE) prevent input conflicts when in menus or during conversations.
 
-4. Player System
-PlayerContinuousGridMovement.cs
+### 4. Player System
+**`PlayerContinuousGridMovement.cs`**
 
-Provides grid-based and mouse-click movement.
+- Provides grid-based and mouse-click movement
+- Supports both keyboard and mouse input
+- Freezes during dialogue or UI interactions
+- Animates walking via Animator parameters
+- Handles grid snapping and direction flipping
 
-Supports both keyboard and mouse input.
+### 5. Quest System
+**Core Files:**
 
-Freezes during dialogue or UI interactions.
+- **`QuestManager.cs`** – orchestrates all quest logic
+- **`Quest.cs`** – represents individual quests
+- **`QuestInfoSO.cs`** – defines quest data via ScriptableObjects
+- **`QuestStep.cs`** – base class for quest steps
+- **`QuestPoint.cs`** – interactable world objects that start or finish quests
+- **`QuestStepState.cs`** / **`QuestData.cs`** – track save data
+- **`QuestState.cs`** – enum for quest progress states
+- **`QuestIcon.cs`** – updates quest marker visuals in-world
 
-Animates walking via Animator parameters.
+**Key Features:**
 
-Handles grid snapping and direction flipping.
+- Automatically loads all quests from `Resources/Quests/`
+- Supports quest prerequisites and level requirements
+- Saves quest progress using PlayerPrefs (JSON-serialized)
+- Broadcasts quest state updates for UI and icons
+- Integrates with Ink for quest triggers from dialogue
 
-5. Quest System
-Core Files:
-
-QuestManager.cs – orchestrates all quest logic
-
-Quest.cs – represents individual quests
-
-QuestInfoSO.cs – defines quest data via ScriptableObjects
-
-QuestStep.cs – base class for quest steps
-
-QuestPoint.cs – interactable world objects that start or finish quests
-
-QuestStepState.cs / QuestData.cs – track save data
-
-QuestState.cs – enum for quest progress states
-
-QuestIcon.cs – updates quest marker visuals in-world
-
-Key Features:
-
-Automatically loads all quests from Resources/Quests/
-
-Supports quest prerequisites and level requirements
-
-Saves quest progress using PlayerPrefs (JSON-serialized)
-
-Broadcasts quest state updates for UI and icons
-
-Integrates with Ink for quest triggers from dialogue
-
-6. Example Quest
-CollectCoinsQuestStep.cs
+### 6. Example Quest
+**`CollectCoinsQuestStep.cs`**
 
 Demonstrates how to implement a custom quest step:
 
-Listens to onCoinCollected events
+- Listens to onCoinCollected events
+- Tracks progress toward a target number of coins
+- Updates status text dynamically
+- Completes automatically once requirements are met
 
-Tracks progress toward a target number of coins
+### 7. Dialogue System (Ink Integration)
+**Core Files:**
 
-Updates status text dynamically
+- **`DialogueManager.cs`** – handles Ink story playback
+- **`InkDialogueVariables.cs`** – syncs Ink globals with Unity variables
+- **`InkExternalFunctions.cs`** – binds C# functions (StartQuest, AdvanceQuest, etc.) callable from Ink scripts
+- **`DialogueEvents.cs`** – manages dialogue-related events
 
-Completes automatically once requirements are met
+**Workflow:**
 
-7. Dialogue System (Ink Integration)
-Core Files:
-
-DialogueManager.cs – handles Ink story playback
-
-InkDialogueVariables.cs – syncs Ink globals with Unity variables
-
-InkExternalFunctions.cs – binds C# functions (StartQuest, AdvanceQuest, etc.) callable from Ink scripts
-
-DialogueEvents.cs – manages dialogue-related events
-
-Workflow:
-
-DialogueManager receives an event (EnterDialogue).
-
-It loads the Ink story, syncs variables, and starts playback.
-
-Each dialogue line and choice is displayed via the UI system.
-
-When the story ends, control returns to the player.
+1. DialogueManager receives an event (EnterDialogue)
+2. It loads the Ink story, syncs variables, and starts playback
+3. Each dialogue line and choice is displayed via the UI system
+4. When the story ends, control returns to the player
 
 External Function Examples:
 
-ink
-Copy code
+```ink
 ~ StartQuest("CollectCoinsQuest")
 ~ AdvanceQuest("CollectCoinsQuest")
 ~ FinishQuest("CollectCoinsQuest")
-8. UI System
-Dialogue UI
+```
+### 8. UI System
 
-DialoguePanelUI.cs – displays dialogue text and choices
+**Dialogue UI**
+- **`DialoguePanelUI.cs`** – displays dialogue text and choices
+- **`DialogueChoiceButton.cs`** – represents interactive choice options
+- Automatically reacts to dialogue events and updates via Ink story choices
 
-DialogueChoiceButton.cs – represents interactive choice options
+**Quest Log UI**
+- **`QuestLogUI.cs`** – toggles quest log visibility
+- **`QuestLogScrollingList.cs`** – manages scrolling list of quests
+- **`QuestLogButton.cs`** – individual quest entries with color-coded states
 
-Automatically reacts to dialogue events and updates via Ink story choices
+**Gold UI**
+- **`GoldUI.cs`** – updates player gold count on screen
 
-Quest Log UI
+### 9. Gold & Collectibles
 
-QuestLogUI.cs – toggles quest log visibility
+**`GoldManager.cs`**
+- Tracks total gold and reacts to GoldGained events
 
-QuestLogScrollingList.cs – manages scrolling list of quests
-
-QuestLogButton.cs – individual quest entries with color-coded states
-
-Gold UI
-
-GoldUI.cs – updates player gold count on screen
-
-9. Gold & Collectibles
-GoldManager.cs
-
-Tracks total gold and reacts to GoldGained events
-
-Coin.cs
-
+**`Coin.cs`**  
 Simple collectible that:
+- Adds gold when collected
+- Triggers a coin collection event for quests
+- Respawns after a configurable delay
 
-Adds gold when collected
-
-Triggers a coin collection event for quests
-
-Respawns after a configurable delay
-
-🔄 Data Flow Summary
-Player interacts with a QuestPoint or dialogue node.
-
-DialogueManager triggers Ink story and handles player choices.
-
-Ink functions (like StartQuest()) call GameEventsManager.questEvents.
-
-QuestManager updates quest state and saves progress.
-
-QuestLogUI and QuestIcon update automatically through event subscriptions.
+## 🔄 Data Flow Summary
+1. Player interacts with a QuestPoint or dialogue node
+2. DialogueManager triggers Ink story and handles player choices
+3. Ink functions (like `StartQuest()`) call `GameEventsManager.questEvents`
+4. QuestManager updates quest state and saves progress
+5. QuestLogUI and QuestIcon update automatically through event subscriptions
 
 💾 Saving and Loading
 Quest progress is serialized using JsonUtility and stored in PlayerPrefs.
@@ -203,61 +164,46 @@ Each quest uses its ScriptableObject ID as a unique key.
 
 For production, replace this with a persistent save/load system.
 
-🧠 Dependencies
-Unity Input System
-
-Ink Unity Integration
-
-TextMeshPro
-
-2D Physics & Tilemaps
+## 🧠 Dependencies
+- Unity Input System
+- Ink Unity Integration
+- TextMeshPro
+- 2D Physics & Tilemaps
 
 🧪 Extending the System
-Feature	How to Extend
-New Quest	Duplicate a QuestInfoSO under Resources/Quests/
-New Step Type	Inherit from QuestStep
-Dialogue Expansion	Add Ink files and reference in DialogueManager
-New Events	Extend GameEventsManager
+| Feature | How to Extend |
+|---------|--------------|
+| New Quest | Duplicate a QuestInfoSO under Resources/Quests/ |
+| New Step Type | Inherit from QuestStep |
+| Dialogue Expansion | Add Ink files and reference in DialogueManager |
+| New Events | Extend GameEventsManager |
 
-🧭 Example Setup
-Add a GameEventsManager prefab to the scene.
+## 🧭 Example Setup
+1. Add a GameEventsManager prefab to the scene.
+2. Add a QuestManager and GoldManager.
+3. Assign a player prefab with PlayerContinuousGridMovement.
+4. Add QuestPoint objects and link them to quest ScriptableObjects.
+5. Add the Dialogue UI prefab and reference it in the scene.
 
-Add a QuestManager and GoldManager.
-
-Assign a player prefab with PlayerContinuousGridMovement.
-
-Add QuestPoint objects and link them to quest ScriptableObjects.
-
-Add the Dialogue UI prefab and reference it in the scene.
-
-🧱 Key Design Principles
-Modularity: Each subsystem (quests, dialogue, UI, input) is self-contained.
-
-Event-Driven: Loose coupling between components using Unity Actions.
-
-Ink Integration: Enables branching storytelling and quest logic from dialogue.
-
-Data Persistence: Quests and variables persist across sessions.
+## 🧱 Key Design Principles
+- **Modularity:** Each subsystem (quests, dialogue, UI, input) is self-contained
+- **Event-Driven:** Loose coupling between components using Unity Actions
+- **Ink Integration:** Enables branching storytelling and quest logic from dialogue
+- **Data Persistence:** Quests and variables persist across sessions
 
 🧾 License
 ⚔️ Tactical Combat Framework (Tactics2D)
 A modular 2D turn-based tactical combat framework for Unity.
 
-Features:
-
-Grid-based movement and pathfinding
-
-Player and AI turn management
-
-Attack actions and visual feedback
-
-Teleport tiles and modular tile behaviors
-
-Orthographic camera auto-framing
+**Features:**
+- Grid-based movement and pathfinding
+- Player and AI turn management
+- Attack actions and visual feedback
+- Teleport tiles and modular tile behaviors
+- Orthographic camera auto-framing
 
 📂 Directory Structure
-css
-Copy code
+```
 Scripts/
  └── Tactical_Combat_Framework/
      ├── AI/
@@ -337,23 +283,17 @@ Auto-centers and zooms to include all active units.
 🧠 11. UI System
 Optional HUDController for displaying current turn, tile info, and unit stats.
 
-⚡ Setup Guide
-Create a Tilemap and attach GridManager.
+## ⚡ Setup Guide
+1. Create a Tilemap and attach GridManager.
+2. Create DataTile and BehaviorTile assets.
+3. Add unit prefabs and managers (TurnManager, AIController).
+4. Assign TacticalCameraController to the main camera.
 
-Create DataTile and BehaviorTile assets.
-
-Add unit prefabs and managers (TurnManager, AIController).
-
-Assign TacticalCameraController to the main camera.
-
-🧩 Design Principles
-Separation of Concerns – Each subsystem does one job.
-
-Extensibility – Use interfaces and ScriptableObjects for flexibility.
-
-Clarity – Clean, commented, and readable code.
-
-Event-Driven – Tile and unit hooks drive interactions.
+## 🧩 Design Principles
+- **Separation of Concerns** – Each subsystem does one job
+- **Extensibility** – Use interfaces and ScriptableObjects for flexibility
+- **Clarity** – Clean, commented, and readable code
+- **Event-Driven** – Tile and unit hooks drive interactions
 
 🧾 License
 This framework is open for educational and prototype use.
