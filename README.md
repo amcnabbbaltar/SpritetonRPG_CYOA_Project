@@ -323,67 +323,60 @@ Example usage:
 ```csharp
 var path = Pathfinder.FindPath(grid, startCell, goalCell);
 var range = Pathfinder.FloodFill(grid, startCell, unit.Stats.maxMove);
-🤖 3. AI System
-AIController.cs
+```
+
+### 🤖 3. AI System
+**`AIController.cs`**  
 Controls enemy turns and decisions:
 
-Finds the nearest player unit.
+- Finds the nearest player unit
+- If in range → attacks
+- Otherwise moves toward the player and attacks if possible
+- Waits between actions to simulate thinking time
+- Works cooperatively with the TurnManager
 
-If in range → attacks.
-
-Otherwise moves toward the player and attacks if possible.
-
-Waits between actions to simulate thinking time.
-
-Works cooperatively with the TurnManager.
-
-##🧍 4. Player Control
-PlayerController.cs
+### 🧍 4. Player Control
+**`PlayerController.cs`**  
 Handles player clicks and turn actions:
 
-Left-click → select a friendly unit.
-
-Left-click on empty cell → move.
-
-Left-click on enemy → attack.
-
-Right-click → cancel selection.
+- Left-click → select a friendly unit
+- Left-click on empty cell → move
+- Left-click on enemy → attack
+- Right-click → cancel selection
 
 Integrates with GridManager for highlighting movement range and TurnManager for turn flow.
 
-##🔁 5. Turn Management
-`TurnManager.cs`
+### 🔁 5. Turn Management
+**`TurnManager.cs`**  
 Coordinates player and enemy turns:
 
-Alternates between player and AI phases.
-
-Delegates all AI behavior to AIController.ExecuteTurn.
-
-Calls EndTurn() when actions complete.
+- Alternates between player and AI phases
+- Delegates all AI behavior to AIController.ExecuteTurn
+- Calls `EndTurn()` when actions complete
 
 Example:
-``
+```csharp
 turnManager.EndTurn(); // switches to next phase automatically
-``
-##✨ 6. Teleport System
-TeleportSystem.cs
-Manages all teleporter tiles, grouped by string IDs (e.g., "A", "B", "C").
+```
 
-Handles registering teleport tiles into groups.
+### ✨ 6. Teleport System
+**`TeleportSystem.cs`**
+Manages all teleporter tiles, grouped by string IDs (e.g., "A", "B", "C"):
 
-Teleports units when entering a teleport tile.
+- Handles registering teleport tiles into groups
+- Teleports units when entering a teleport tile
+- Can trigger visual effects and hide the unit during transport
+- Integrates seamlessly with the GridManager and pathfinding logic
 
-Can trigger visual effects and hide the unit during transport.
-
-Integrates seamlessly with the GridManager and pathfinding logic.
-`TeleportBehavior.cs`
-Implements the ITileBehavior interface.
-Registered via BehaviorTile assets.
-Automatically links teleport tiles with their group and effects.
+**`TeleportBehavior.cs`**
+- Implements the ITileBehavior interface
+- Registered via BehaviorTile assets
+- Automatically links teleport tiles with their group and effects
 
 Example:
-
+```csharp
 TeleportSystem.Instance.RegisterTeleport(tilePos, "A", teleportFX);
+```
 🧱 7. Tile & Behavior System
 DataTile.cs
 A base tile asset with:
@@ -475,8 +468,8 @@ Current tile info
 
 “End Turn” button integration
 
-##🧭 System Architecture Diagram
-```
+## 🧭 System Architecture Diagram
+```mermaid
                  ┌──────────────────────────┐
                  │      TacticalCamera      │
                  │ (auto focus & zoom)      │
@@ -547,28 +540,34 @@ Current tile info
 │                                                               │
 └───────────────────────────────────────────────────────────────┘
 ```
-🔄 Simplified Data Flow Summary
-1. Player Turn
 
-PlayerController
-   → GridManager (get reachable cells)
-   → Pathfinder (find path)
-   → Unit.MoveAlong(path)
-   → Unit.ExecuteAction(Attack)
-   → TurnManager.EndTurn()
-2. Enemy Turn
+## 🔄 Data Flow Summary
 
-TurnManager
-   → AIController.ExecuteTurn(enemy)
-       → Pathfinder (move toward nearest player)
-       → Unit.ExecuteAction(Attack)
-   → End of all enemies → IsPlayersTurn = true
-3. Movement + Tile Behavior
-
-Unit.MoveIntoCell()
-   → GridManager.OnUnitEnterCell()
-        → (if tile has ITileBehavior)
-            → behavior.OnUnitEnter(unit, grid)
-                → TeleportSystem.TryTeleport()
+### 1. Player Turn
+```mermaid
+graph TD
+    A[PlayerController] -->|Get reachable cells| B[GridManager]
+    B --> C[Pathfinder]
+    C -->|Find path| D[Unit.MoveAlong]
+    D -->|Execute| E[Unit.ExecuteAction]
+    E -->|Complete| F[TurnManager.EndTurn]
+```
+### 2. Enemy Turn
+```mermaid
+graph TD
+    A[TurnManager] -->|Execute Turn| B[AIController]
+    B -->|Find path to player| C[Pathfinder]
+    C -->|Move & Attack| D[Unit.ExecuteAction]
+    D -->|Complete| E[End Turn]
+    E -->|All enemies done| F[Set IsPlayersTurn = true]
+```
+### 3. Movement + Tile Behavior
+```mermaid
+graph TD
+    A[Unit.MoveIntoCell] -->|Enter| B[GridManager.OnUnitEnterCell]
+    B -->|Check| C{Has ITileBehavior?}
+    C -->|Yes| D[behavior.OnUnitEnter]
+    D -->|If teleporter| E[TeleportSystem.TryTeleport]
+```
 
 
