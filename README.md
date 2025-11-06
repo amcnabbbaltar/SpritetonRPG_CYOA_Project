@@ -240,6 +240,7 @@ Scripts/
              ├── IUnitAction.cs
              └── Actions/
                  └── AttackAction.cs
+```
 ⚙️ Core Systems Overview
 🧩 1. Grid System
 Handles logical grid construction, occupancy, and interaction callbacks (OnUnitEnterCell / OnUnitExitCell).
