@@ -191,11 +191,10 @@ For production, replace this with a persistent save/load system.
 - **Ink Integration:** Enables branching storytelling and quest logic from dialogue
 - **Data Persistence:** Quests and variables persist across sessions
 
-🧾 License
 
 
-⚔️ Tactical Combat Framework (Tactics2D)
-A modular 2D turn-based tactical combat framework for Unity.
+## ⚔️ Tactical Combat Framework (Tactics2D)
+## A modular 2D turn-based tactical combat framework for Unity.
 
 **Features:**
 - Grid-based movement and pathfinding
@@ -204,7 +203,7 @@ A modular 2D turn-based tactical combat framework for Unity.
 - Teleport tiles and modular tile behaviors
 - Orthographic camera auto-framing
 
-📂 Directory Structure
+## 📂 Directory Structure
 ```
 Scripts/
  └── Tactical_Combat_Framework/
@@ -241,15 +240,15 @@ Scripts/
              └── Actions/
                  └── AttackAction.cs
 ```
-⚙️ Core Systems Overview
-🧩 1. Grid System
+## ⚙️ Core Systems Overview
+## 🧩 1. Grid System
 Handles logical grid construction, occupancy, and interaction callbacks (OnUnitEnterCell / OnUnitExitCell).
 
-🧮 2. Pathfinding
+## 🧮 2. Pathfinding
 Implements A* and BFS algorithms.
 Supports teleportation shortcuts.
 
-🤖 3. AI System
+## 🤖 3. AI System
 Simple heuristic AI:
 
 Finds nearest player
@@ -258,32 +257,32 @@ Moves toward or attacks
 
 Waits between actions for pacing
 
-🧍 4. Player Control
+## 🧍 4. Player Control
 Click-based tactical controls:
 
 Select → Move → Attack
 
 Cancel with right-click
 
-🔁 5. Turn Management
+## 🔁 5. Turn Management
 Alternates between player and AI phases using coroutines.
 
-✨ 6. Teleport System
+## ✨ 6. Teleport System
 Registers teleport groups and handles instant transport between tiles.
 
-🧱 7. Tile & Behavior System
+## 🧱 7. Tile & Behavior System
 Allows custom tile behaviors via ITileBehavior (e.g., traps, portals, healing).
 
-⚔️ 8. Units
+## ⚔️ 8. Units
 Each unit manages its stats, team, actions, and movement animation.
 
-🗡️ 9. Unit Actions
+## 🗡️ 9. Unit Actions
 Modular IUnitAction interface enables custom skills (AttackAction, HealAction, etc.).
 
-🎥 10. Camera System
+## 🎥 10. Camera System
 Auto-centers and zooms to include all active units.
 
-🧠 11. UI System
+## 🧠 11. UI System
 Optional HUDController for displaying current turn, tile info, and unit stats.
 
 ## ⚡ Setup Guide
