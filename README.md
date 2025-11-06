@@ -377,26 +377,26 @@ Example:
 ```csharp
 TeleportSystem.Instance.RegisterTeleport(tilePos, "A", teleportFX);
 ```
-🧱 7. Tile & Behavior System
-DataTile.cs
+### 🧱 7. Tile & Behavior System
+
+#### **`DataTile.cs`**
 A base tile asset with:
+- `walkable`
+- `moveCost`
+- `blocksVision`
 
-walkable
-
-moveCost
-
-blocksVision
-
-BehaviorTile.cs
-Extends DataTile by allowing a linked ScriptableObject implementing ITileBehavior.
+#### **`BehaviorTile.cs`**
+Extends `DataTile` by allowing a linked ScriptableObject implementing `ITileBehavior`.
 This allows flexible tile interactions (teleports, traps, healing zones, etc.).
 
-ITileBehavior.cs
+#### **`ITileBehavior.cs`**
 Defines the contract for any interactive tile:
-
-void Initialize(GridManager grid, Vector3Int position);
-void OnUnitEnter(Unit unit, GridManager grid);
-void OnUnitExit(Unit unit, GridManager grid);
+```csharp
+public interface ITileBehavior {
+    void Initialize(GridManager grid, Vector3Int position);
+    void OnUnitEnter(Unit unit, GridManager grid);
+    void OnUnitExit(Unit unit, GridManager grid);
+}
 ⚔️ 8. Units
 Unit.cs
 The central component for all characters:
