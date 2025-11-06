@@ -397,76 +397,65 @@ public interface ITileBehavior {
     void OnUnitEnter(Unit unit, GridManager grid);
     void OnUnitExit(Unit unit, GridManager grid);
 }
-⚔️ 8. Units
-Unit.cs
-The central component for all characters:
+    ### ⚔️ 8. Units
 
-Contains cloned runtime stats and action instances.
+    #### **`Unit.cs`**
+    The central component for all characters:
+    - Contains cloned runtime stats and action instances
+    - Handles movement, combat, and animation
+    - Supports `MoveAlong(path)` and `TakeDamage()` behaviors
+    - Automatically registers with its starting grid cell
 
-Handles movement, combat, and animation.
+    #### **`UnitStats.cs`**
+    ScriptableObject defining:
+    - HP, attack power/range, movement speed/range
+    - Team affiliation
+    - Optional visual damage color
 
-Supports MoveAlong(path) and TakeDamage() behaviors.
+    #### **`Team.cs`**
+    Enum for differentiating factions:
+    ```csharp
+    public enum Team { Player, Enemy, Neutral }
+    ```
+### 🗡️ 9. Unit Actions
 
-Automatically registers with its starting grid cell.
-
-UnitStats.cs
-ScriptableObject defining:
-
-HP, attack power/range, movement speed/range
-
-Team affiliation
-
-Optional visual damage color
-
-Team.cs
-Enum for differentiating factions:
-
-public enum Team { Player, Enemy, Neutral }
-🗡️ 9. Unit Actions
-IUnitAction.cs
+#### **`IUnitAction.cs`**
 Defines the structure for all unit abilities:
-
+```csharp
 public interface IUnitAction {
     string ActionName { get; }
     bool CanExecute(Unit unit);
     IEnumerator Execute(Unit unit);
 }
-AttackAction.cs
-A ScriptableObject implementing IUnitAction:
+```
 
-Finds the nearest enemy within attack range.
+#### **`AttackAction.cs`**
+A ScriptableObject implementing `IUnitAction`:
+- Finds the nearest enemy within attack range
+- Animates attack motion and triggers VFX
+- Applies damage and flashes target color
+- Integrates with Unity Animator via a configurable trigger
 
-Animates attack motion and triggers VFX.
-
-Applies damage and flashes target color.
-
-Integrates with Unity Animator via a configurable trigger.
-
-🎥 10. Camera System
-TacticalCameraController.cs
+### 🎥 10. Camera System
+#### **`TacticalCameraController.cs`**
 Smart orthographic camera that:
+- Automatically centers and zooms to include all active units
+- Allows manual zoom with scroll wheel
+- Smoothly transitions between focus targets
 
-Automatically centers and zooms to include all active units.
-
-Allows manual zoom with scroll wheel.
-
-Smoothly transitions between focus targets.
-
-Methods:
-
+**Methods:**
+```csharp
 EnableAutoFocus(true);
 ForceRecenter();
-🧠 11. UI System
-HUDController.cs (optional)
+```
+
+### 🧠 11. UI System
+#### **`HUDController.cs`** (optional)
 Provides runtime UI for:
-
-Current turn display
-
-Selected unit stats
-
-Current tile info
-
-“End Turn” button integration
+- Current turn display
+- Selected unit stats
+- Current tile info
+- "End Turn" button integration
 
 ## 🧭 System Architecture Diagram
 ```mermaid
