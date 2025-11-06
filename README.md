@@ -27,16 +27,16 @@ All systems remain decoupled—allowing easy modification, extension, and testin
 
 ---
 
-## ⚙️ Systems Overview
+##  ⚙️ Systems Overview
 
-### 1. Camera System
-**`FollowTarget.cs`**
+## 1. Camera System
+`FollowTarget.cs`**
 - Attaches to the main camera.  
 - Keeps the camera aligned with a designated `targetTransform` (usually the player).  
 - You can enable/disable following on X or Y axes and set an optional offset.
 
-### 2. Event System
-**`GameEventsManager.cs`**
+##  2. Event System
+GameEventsManager.cs
 - Singleton that initializes and exposes all game event categories:
   - InputEvents  
   - PlayerEvents  
@@ -46,8 +46,8 @@ All systems remain decoupled—allowing easy modification, extension, and testin
   - DialogueEvents  
 - Each event class defines delegates and methods for invoking specific game actions.
 
-**Examples:**
-```csharp
+Examples:*
+
 PlayerEvents.DisablePlayerMovement(); // freeze player movement during dialogue
 QuestEvents.StartQuest("CollectCoinsQuest");
 ```
@@ -192,6 +192,8 @@ For production, replace this with a persistent save/load system.
 - **Data Persistence:** Quests and variables persist across sessions
 
 🧾 License
+
+
 ⚔️ Tactical Combat Framework (Tactics2D)
 A modular 2D turn-based tactical combat framework for Unity.
 
