@@ -51,23 +51,17 @@ namespace Tactics2D
             Debug.Log($"[TeleportSystem] Registered {pos} in group '{group}'");
         }
 
-        /// <summary>
-        /// Teleports a unit if it stands on a teleport tile.
-        /// Automatically handles cell occupancy updates.
-        /// </summary>
         public bool TryTeleport(Unit unit, GridCell fromCell)
         {
             if (unit == null || fromCell == null || grid == null)
                 return false;
 
-            // Check if this tile belongs to a teleport group
             if (!teleportGroups.TryGetValue(fromCell.GridPos, out string group))
                 return false;
 
             if (!groupToTiles.TryGetValue(group, out var tiles) || tiles.Count < 2)
                 return false;
 
-            // Pick another teleport in the same group
             Vector3Int destination;
             do
             {
@@ -77,7 +71,6 @@ namespace Tactics2D
             if (!grid.Cells.TryGetValue(destination, out var destTeleportCell))
                 return false;
 
-            // Find a valid neighboring cell around the destination teleport
             GridCell targetNeighbor = null;
             var freeNeighbors = new List<GridCell>();
 
@@ -90,13 +83,22 @@ namespace Tactics2D
             if (freeNeighbors.Count > 0)
                 targetNeighbor = freeNeighbors[Random.Range(0, freeNeighbors.Count)];
             else
-                targetNeighbor = destTeleportCell; // fallback if all neighbors blocked
+                targetNeighbor = destTeleportCell;
 
             // --- VISUAL FX: Exit ---
             if (teleportEffects.TryGetValue(fromCell.GridPos, out var fxPrefab))
                 Object.Instantiate(fxPrefab, unit.transform.position, Quaternion.identity);
 
             Debug.Log($"[TeleportSystem] {unit.UnitName} teleports from {fromCell.GridPos} → {targetNeighbor.GridPos}");
+
+            // --- HIDE UNIT SPRITE ---
+            var renderers = unit.GetComponentsInChildren<SpriteRenderer>();
+            foreach (var r in renderers)
+                r.enabled = false; // hide visuals
+
+            // (Optional) disable collider if you want to avoid interaction during teleport
+            var collider = unit.GetComponent<Collider2D>();
+            if (collider) collider.enabled = false;
 
             // --- UPDATE CELL OCCUPANCY ---
             fromCell.RemoveOccupant(unit);
@@ -106,15 +108,30 @@ namespace Tactics2D
             unit.transform.position = targetNeighbor.WorldCenter;
             unit.SetCurrentCell(targetNeighbor);
 
-            // --- Notify GridManager behaviors (for chains, triggers, etc.) ---
-            grid.RefreshUnitPosition(unit);
-
             // --- VISUAL FX: Entry ---
             if (teleportEffects.TryGetValue(destination, out var fxPrefab2))
                 Object.Instantiate(fxPrefab2, targetNeighbor.WorldCenter, Quaternion.identity);
 
+            // --- REAPPEAR AFTER DELAY ---
+            unit.StartCoroutine(ReappearAfterDelay(unit, 0.2f)); // fade back in after 0.2 seconds
+
+            // --- Notify GridManager behaviors ---
+            grid.RefreshUnitPosition(unit);
+
             return true;
         }
+
+    private System.Collections.IEnumerator ReappearAfterDelay(Unit unit, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        var renderers = unit.GetComponentsInChildren<SpriteRenderer>();
+        foreach (var r in renderers)
+            r.enabled = true;
+
+        var collider = unit.GetComponent<Collider2D>();
+        if (collider) collider.enabled = true;
+    }
 
         // ---------------- Group Queries ----------------
 
