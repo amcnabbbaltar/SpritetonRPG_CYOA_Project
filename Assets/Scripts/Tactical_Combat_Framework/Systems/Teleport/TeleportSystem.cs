@@ -56,68 +56,73 @@ namespace Tactics2D
             if (unit == null || fromCell == null || grid == null)
                 return false;
 
+            // 1️⃣ Check if this cell is part of a teleport group
             if (!teleportGroups.TryGetValue(fromCell.GridPos, out string group))
                 return false;
 
+            // 2️⃣ Find a destination teleport tile
             if (!groupToTiles.TryGetValue(group, out var tiles) || tiles.Count < 2)
                 return false;
 
             Vector3Int destination;
+            int safety = 10; // avoid infinite loop
             do
             {
                 destination = tiles[Random.Range(0, tiles.Count)];
-            } while (destination == fromCell.GridPos && tiles.Count > 1);
+                safety--;
+            } while (destination == fromCell.GridPos && tiles.Count > 1 && safety > 0);
 
             if (!grid.Cells.TryGetValue(destination, out var destTeleportCell))
                 return false;
 
+            // 3️⃣ Pick a valid free neighbor (fallback = destination cell)
             GridCell targetNeighbor = null;
             var freeNeighbors = new List<GridCell>();
 
             foreach (var neighbor in grid.Neighbors(destTeleportCell))
             {
-                if (neighbor.Walkable && !neighbor.IsTaken)
+                if (neighbor != null && neighbor.Walkable && !neighbor.IsTaken)
                     freeNeighbors.Add(neighbor);
             }
 
-            if (freeNeighbors.Count > 0)
-                targetNeighbor = freeNeighbors[Random.Range(0, freeNeighbors.Count)];
-            else
-                targetNeighbor = destTeleportCell;
+            targetNeighbor = freeNeighbors.Count > 0 ? 
+                freeNeighbors[Random.Range(0, freeNeighbors.Count)] : 
+                destTeleportCell;
 
-            // --- VISUAL FX: Exit ---
+            if (targetNeighbor == null || targetNeighbor == fromCell)
+                return false;
+
+            // 4️⃣ VISUAL FX: Exit
             if (teleportEffects.TryGetValue(fromCell.GridPos, out var fxPrefab))
                 Object.Instantiate(fxPrefab, unit.transform.position, Quaternion.identity);
 
-            Debug.Log($"[TeleportSystem] {unit.UnitName} teleports from {fromCell.GridPos} → {targetNeighbor.GridPos}");
-
-            // --- HIDE UNIT SPRITE ---
+            // 5️⃣ TEMPORARILY HIDE
             var renderers = unit.GetComponentsInChildren<SpriteRenderer>();
             foreach (var r in renderers)
-                r.enabled = false; // hide visuals
+                r.enabled = false;
 
-            // (Optional) disable collider if you want to avoid interaction during teleport
             var collider = unit.GetComponent<Collider2D>();
             if (collider) collider.enabled = false;
 
-            // --- UPDATE CELL OCCUPANCY ---
+            // 6️⃣ Safely remove from old cell
             fromCell.RemoveOccupant(unit);
-            targetNeighbor.AddOccupant(unit);
 
-            // --- PHYSICAL MOVE ---
+            // 7️⃣ Move physically and logically
             unit.transform.position = targetNeighbor.WorldCenter;
             unit.SetCurrentCell(targetNeighbor);
+            targetNeighbor.AddOccupant(unit);
 
-            // --- VISUAL FX: Entry ---
+            // 8️⃣ VISUAL FX: Entry
             if (teleportEffects.TryGetValue(destination, out var fxPrefab2))
                 Object.Instantiate(fxPrefab2, targetNeighbor.WorldCenter, Quaternion.identity);
 
-            // --- REAPPEAR AFTER DELAY ---
-            unit.StartCoroutine(ReappearAfterDelay(unit, 0.2f)); // fade back in after 0.2 seconds
+            // 9️⃣ Reappear after short delay
+            unit.StartCoroutine(ReappearAfterDelay(unit, 0.25f));
 
-            // --- Notify GridManager behaviors ---
+            // 🔟 Update grid
             grid.RefreshUnitPosition(unit);
 
+            Debug.Log($"[TeleportSystem] {unit.UnitName} teleported from {fromCell.GridPos} → {targetNeighbor.GridPos}");
             return true;
         }
 
