@@ -290,12 +290,352 @@ Optional HUDController for displaying current turn, tile info, and unit stats.
 2. Create DataTile and BehaviorTile assets.
 3. Add unit prefabs and managers (TurnManager, AIController).
 4. Assign TacticalCameraController to the main camera.
+### More Detailed explenation 
+# ⚔️ Tactical Combat Framework (Tactics2D)
+
+A modular **2D turn-based tactical combat framework** for Unity, featuring:
+- Grid-based movement and pathfinding  
+- Player and AI turn management  
+- Attack actions and visual feedback  
+- Teleport tiles and modular tile behaviors  
+- Orthographic camera auto-framing  
+- Extensible design for custom units, skills, and tile types  
+
+---
+
+## 🧱 Overview
+
+This framework is built around **modularity**, **clarity**, and **extendability** — each system (Grid, Unit, AI, Turn, Tile Behavior, etc.) is self-contained and communicates through simple interfaces or manager classes.  
+
+All gameplay occurs on a **Tilemap-based grid**, where each cell (`GridCell`) holds occupancy, walkability, and special behaviors (like teleporters).
+
+---
+
+## 📂 Directory Structure
+
+Scripts/
+└── Tactical_Combat_Framework/
+├── AI/
+│ └── AIController.cs
+├── Camera/
+│ └── TacticalCameraController.cs
+├── Controls/
+│ ├── PlayerController.cs
+│ └── TurnManager.cs
+├── Grid/
+│ ├── GridManager.cs
+│ └── GridCell.cs
+├── PathFinding/
+│ └── Pathfinder.cs
+├── Systems/
+│ └── Teleport/
+│ └── TeleportSystem.cs
+├── Tile/
+│ ├── DataTile.cs
+│ └── BehaviourTiles/
+│ ├── BehaviorTile.cs
+│ ├── ITileBehavior.cs
+│ └── Teleport_Behaviour/
+│ └── TeleportBehavior.cs
+├── UI/
+│ └── HUDController.cs (optional)
+└── Units/
+├── Team.cs
+├── Unit.cs
+├── UnitStats.cs
+└── UnitAction/
+├── IUnitAction.cs
+└── Actions/
+└── AttackAction.cs
+
+
+---
+
+## ⚙️ Core Systems
+
+### 🧩 1. **Grid System**
+
+#### `GridManager.cs`
+- Builds the logical grid from a **Tilemap**.  
+- Stores movement costs, occupancy, and references to tile behaviors.
+- Handles highlighting and tile-based interactions.  
+- Calls behavior hooks (`OnUnitEnterCell`, `OnUnitExitCell`) when units move.
+
+#### `GridCell.cs`
+Represents a single logical tile on the grid:
+- Position (`GridPos` / `WorldCenter`)
+- Walkability and visibility
+- Occupancy tracking (`AddOccupant`, `RemoveOccupant`)
+
+---
+
+### 🧮 2. **Pathfinding**
+
+#### `Pathfinder.cs`
+Implements:
+- **A\*** pathfinding for movement (`FindPath`)
+- **BFS Flood Fill** for range preview (`FloodFill`)
+- Supports **teleport tiles** as part of navigation (zero-cost warp links).
+
+Example usage:
+```csharp
+var path = Pathfinder.FindPath(grid, startCell, goalCell);
+var range = Pathfinder.FloodFill(grid, startCell, unit.Stats.maxMove);
+🤖 3. AI System
+AIController.cs
+Controls enemy turns and decisions:
+
+Finds the nearest player unit.
+
+If in range → attacks.
+
+Otherwise moves toward the player and attacks if possible.
+
+Waits between actions to simulate thinking time.
+
+Works cooperatively with the TurnManager.
+
+##🧍 4. Player Control
+PlayerController.cs
+Handles player clicks and turn actions:
+
+Left-click → select a friendly unit.
+
+Left-click on empty cell → move.
+
+Left-click on enemy → attack.
+
+Right-click → cancel selection.
+
+Integrates with GridManager for highlighting movement range and TurnManager for turn flow.
+
+##🔁 5. Turn Management
+`TurnManager.cs`
+Coordinates player and enemy turns:
+
+Alternates between player and AI phases.
+
+Delegates all AI behavior to AIController.ExecuteTurn.
+
+Calls EndTurn() when actions complete.
+
+Example:
+``
+turnManager.EndTurn(); // switches to next phase automatically
+``
+##✨ 6. Teleport System
+TeleportSystem.cs
+Manages all teleporter tiles, grouped by string IDs (e.g., "A", "B", "C").
+
+Handles registering teleport tiles into groups.
+
+Teleports units when entering a teleport tile.
+
+Can trigger visual effects and hide the unit during transport.
+
+Integrates seamlessly with the GridManager and pathfinding logic.
+`TeleportBehavior.cs`
+Implements the ITileBehavior interface.
+Registered via BehaviorTile assets.
+Automatically links teleport tiles with their group and effects.
+
+Example:
+
+TeleportSystem.Instance.RegisterTeleport(tilePos, "A", teleportFX);
+🧱 7. Tile & Behavior System
+DataTile.cs
+A base tile asset with:
+
+walkable
+
+moveCost
+
+blocksVision
+
+BehaviorTile.cs
+Extends DataTile by allowing a linked ScriptableObject implementing ITileBehavior.
+This allows flexible tile interactions (teleports, traps, healing zones, etc.).
+
+ITileBehavior.cs
+Defines the contract for any interactive tile:
+
+void Initialize(GridManager grid, Vector3Int position);
+void OnUnitEnter(Unit unit, GridManager grid);
+void OnUnitExit(Unit unit, GridManager grid);
+⚔️ 8. Units
+Unit.cs
+The central component for all characters:
+
+Contains cloned runtime stats and action instances.
+
+Handles movement, combat, and animation.
+
+Supports MoveAlong(path) and TakeDamage() behaviors.
+
+Automatically registers with its starting grid cell.
+
+UnitStats.cs
+ScriptableObject defining:
+
+HP, attack power/range, movement speed/range
+
+Team affiliation
+
+Optional visual damage color
+
+Team.cs
+Enum for differentiating factions:
+
+public enum Team { Player, Enemy, Neutral }
+🗡️ 9. Unit Actions
+IUnitAction.cs
+Defines the structure for all unit abilities:
+
+public interface IUnitAction {
+    string ActionName { get; }
+    bool CanExecute(Unit unit);
+    IEnumerator Execute(Unit unit);
+}
+AttackAction.cs
+A ScriptableObject implementing IUnitAction:
+
+Finds the nearest enemy within attack range.
+
+Animates attack motion and triggers VFX.
+
+Applies damage and flashes target color.
+
+Integrates with Unity Animator via a configurable trigger.
+
+🎥 10. Camera System
+TacticalCameraController.cs
+Smart orthographic camera that:
+
+Automatically centers and zooms to include all active units.
+
+Allows manual zoom with scroll wheel.
+
+Smoothly transitions between focus targets.
+
+Methods:
+
+EnableAutoFocus(true);
+ForceRecenter();
+🧠 11. UI System
+HUDController.cs (optional)
+Provides runtime UI for:
+
+Current turn display
+
+Selected unit stats
+
+Current tile info
+
+“End Turn” button integration
+
+##🧭 System Architecture Diagram
+```
+                 ┌──────────────────────────┐
+                 │      TacticalCamera      │
+                 │ (auto focus & zoom)      │
+                 └──────────┬───────────────┘
+                            │
+                            ▼
+┌───────────────────────────────────────────────────────────────┐
+│                           Scene                               │
+│                                                               │
+│  ┌──────────────────────────────┐    ┌────────────────────┐   │
+│  │        TurnManager           │◄──►│    PlayerController │   │
+│  │ - Controls turn flow         │    │ - Handles input     │   │
+│  │ - Calls AIController         │    │ - Select/move/attack│   │
+│  └──────────────────────────────┘    └────────────────────┘   │
+│             ▲                         ▲                       │
+│             │                         │                       │
+│             │                         │                       │
+│  ┌──────────────────────────────┐     │                       │
+│  │        AIController          │─────┘                       │
+│  │ - Enemy decision making      │                             │
+│  │ - Chooses target & moves     │                             │
+│  │ - Executes attacks           │                             │
+│  └──────────────────────────────┘                             │
+│                                                               │
+│  ┌───────────────────────────────────────────┐                │
+│  │                Unit                       │                │
+│  │ - Holds stats, team, actions              │                │
+│  │ - Moves along path, takes damage          │                │
+│  │ - Interacts with tile behaviors           │                │
+│  └──────────────┬────────────────────────────┘                │
+│                 │                                             │
+│                 ▼                                             │
+│        ┌────────────────────────────┐                         │
+│        │        GridManager         │                         │
+│        │ - Builds logical grid      │                         │
+│        │ - Tracks occupancy, cost   │                         │
+│        │ - Calls ITileBehavior hooks│                         │
+│        └──────────────┬─────────────┘                         │
+│                       │                                       │
+│                       ▼                                       │
+│         ┌──────────────────────────────┐                      │
+│         │        Pathfinder            │                      │
+│         │ - A* pathfinding             │                      │
+│         │ - BFS range (FloodFill)      │                      │
+│         │ - Teleport-aware navigation  │                      │
+│         └──────────────┬───────────────┘                      │
+│                        │                                      │
+│                        ▼                                      │
+│         ┌──────────────────────────────┐                      │
+│         │       TeleportSystem         │                      │
+│         │ - Registers teleport tiles   │                      │
+│         │ - Handles group teleportation│                      │
+│         │ - Plays VFX and hides unit   │                      │
+│         └──────────────┬───────────────┘                      │
+│                        │                                      │
+│                        ▼                                      │
+│           ┌──────────────────────────────┐                    │
+│           │      ITileBehavior API       │                    │
+│           │ (TeleportBehavior, etc.)     │                    │
+│           │ - Reacts to OnUnitEnter/Exit │                    │
+│           └──────────────────────────────┘                    │
+│                                                               │
+│  ┌────────────────────────────┐    ┌────────────────────┐     │
+│  │       UnitStats (SO)       │    │   AttackAction (SO)│     │
+│  │ - Defines HP, move, atk    │    │ - Implements IUnitAction ││
+│  │ - Instantiated per unit    │    │ - Damage & animation FX   ││
+│  └────────────────────────────┘    └────────────────────┘     │
+│                                                               │
+└───────────────────────────────────────────────────────────────┘
+```
+🔄 Simplified Data Flow Summary
+1. Player Turn
+
+PlayerController
+   → GridManager (get reachable cells)
+   → Pathfinder (find path)
+   → Unit.MoveAlong(path)
+   → Unit.ExecuteAction(Attack)
+   → TurnManager.EndTurn()
+2. Enemy Turn
+
+TurnManager
+   → AIController.ExecuteTurn(enemy)
+       → Pathfinder (move toward nearest player)
+       → Unit.ExecuteAction(Attack)
+   → End of all enemies → IsPlayersTurn = true
+3. Movement + Tile Behavior
+
+Unit.MoveIntoCell()
+   → GridManager.OnUnitEnterCell()
+        → (if tile has ITileBehavior)
+            → behavior.OnUnitEnter(unit, grid)
+                → TeleportSystem.TryTeleport()
+
 
 ## 🧩 Design Principles
 - **Separation of Concerns** – Each subsystem does one job
 - **Extensibility** – Use interfaces and ScriptableObjects for flexibility
 - **Clarity** – Clean, commented, and readable code
 - **Event-Driven** – Tile and unit hooks drive interactions
+
 
 🧾 License
 This framework is open for educational and prototype use.
