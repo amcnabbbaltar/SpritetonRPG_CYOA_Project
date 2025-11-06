@@ -29,14 +29,14 @@ All systems remain decoupled—allowing easy modification, extension, and testin
 
 ##  ⚙️ Systems Overview
 
-## 1. Camera System
-`FollowTarget.cs`**
-- Attaches to the main camera.  
-- Keeps the camera aligned with a designated `targetTransform` (usually the player).  
-- You can enable/disable following on X or Y axes and set an optional offset.
+### 1. Camera System
+**`FollowTarget.cs`**
+- Attaches to the main camera  
+- Keeps the camera aligned with a designated `targetTransform` (usually the player)  
+- You can enable/disable following on X or Y axes and set an optional offset
 
-##  2. Event System
-GameEventsManager.cs
+### 2. Event System
+**`GameEventsManager.cs`**
 - Singleton that initializes and exposes all game event categories:
   - InputEvents  
   - PlayerEvents  
@@ -44,10 +44,10 @@ GameEventsManager.cs
   - MiscEvents  
   - QuestEvents  
   - DialogueEvents  
-- Each event class defines delegates and methods for invoking specific game actions.
+- Each event class defines delegates and methods for invoking specific game actions
 
-Examples:*
-
+**Examples:**
+```csharp
 PlayerEvents.DisablePlayerMovement(); // freeze player movement during dialogue
 QuestEvents.StartQuest("CollectCoinsQuest");
 ```
@@ -158,11 +158,11 @@ Simple collectible that:
 4. QuestManager updates quest state and saves progress
 5. QuestLogUI and QuestIcon update automatically through event subscriptions
 
-💾 Saving and Loading
-Quest progress is serialized using JsonUtility and stored in PlayerPrefs.
-Each quest uses its ScriptableObject ID as a unique key.
+## 💾 Saving and Loading
+- Quest progress is serialized using JsonUtility and stored in PlayerPrefs
+- Each quest uses its ScriptableObject ID as a unique key
 
-For production, replace this with a persistent save/load system.
+> For production, replace this with a persistent save/load system.
 
 ## 🧠 Dependencies
 - Unity Input System
@@ -170,13 +170,13 @@ For production, replace this with a persistent save/load system.
 - TextMeshPro
 - 2D Physics & Tilemaps
 
-🧪 Extending the System
+## 🧪 Extending the System
 | Feature | How to Extend |
 |---------|--------------|
-| New Quest | Duplicate a QuestInfoSO under Resources/Quests/ |
-| New Step Type | Inherit from QuestStep |
-| Dialogue Expansion | Add Ink files and reference in DialogueManager |
-| New Events | Extend GameEventsManager |
+| New Quest | Duplicate a `QuestInfoSO` under `Resources/Quests/` |
+| New Step Type | Inherit from `QuestStep` |
+| Dialogue Expansion | Add Ink files and reference in `DialogueManager` |
+| New Events | Extend `GameEventsManager` |
 
 ## 🧭 Example Setup
 1. Add a GameEventsManager prefab to the scene.
@@ -193,10 +193,10 @@ For production, replace this with a persistent save/load system.
 
 
 
-## ⚔️ Tactical Combat Framework (Tactics2D)
-## A modular 2D turn-based tactical combat framework for Unity.
+# ⚔️ Tactical Combat Framework (Tactics2D)
+A modular 2D turn-based tactical combat framework for Unity.
 
-**Features:**
+## ✨ Features
 - Grid-based movement and pathfinding
 - Player and AI turn management
 - Attack actions and visual feedback
@@ -291,65 +291,7 @@ Optional HUDController for displaying current turn, tile info, and unit stats.
 3. Add unit prefabs and managers (TurnManager, AIController).
 4. Assign TacticalCameraController to the main camera.
 ### More Detailed explenation 
-# ⚔️ Tactical Combat Framework (Tactics2D)
 
-A modular **2D turn-based tactical combat framework** for Unity, featuring:
-- Grid-based movement and pathfinding  
-- Player and AI turn management  
-- Attack actions and visual feedback  
-- Teleport tiles and modular tile behaviors  
-- Orthographic camera auto-framing  
-- Extensible design for custom units, skills, and tile types  
-
----
-
-## 🧱 Overview
-
-This framework is built around **modularity**, **clarity**, and **extendability** — each system (Grid, Unit, AI, Turn, Tile Behavior, etc.) is self-contained and communicates through simple interfaces or manager classes.  
-
-All gameplay occurs on a **Tilemap-based grid**, where each cell (`GridCell`) holds occupancy, walkability, and special behaviors (like teleporters).
-
----
-
-## 📂 Directory Structure
-
-Scripts/
-└── Tactical_Combat_Framework/
-├── AI/
-│ └── AIController.cs
-├── Camera/
-│ └── TacticalCameraController.cs
-├── Controls/
-│ ├── PlayerController.cs
-│ └── TurnManager.cs
-├── Grid/
-│ ├── GridManager.cs
-│ └── GridCell.cs
-├── PathFinding/
-│ └── Pathfinder.cs
-├── Systems/
-│ └── Teleport/
-│ └── TeleportSystem.cs
-├── Tile/
-│ ├── DataTile.cs
-│ └── BehaviourTiles/
-│ ├── BehaviorTile.cs
-│ ├── ITileBehavior.cs
-│ └── Teleport_Behaviour/
-│ └── TeleportBehavior.cs
-├── UI/
-│ └── HUDController.cs (optional)
-└── Units/
-├── Team.cs
-├── Unit.cs
-├── UnitStats.cs
-└── UnitAction/
-├── IUnitAction.cs
-└── Actions/
-└── AttackAction.cs
-
-
----
 
 ## ⚙️ Core Systems
 
@@ -630,13 +572,3 @@ Unit.MoveIntoCell()
                 → TeleportSystem.TryTeleport()
 
 
-## 🧩 Design Principles
-- **Separation of Concerns** – Each subsystem does one job
-- **Extensibility** – Use interfaces and ScriptableObjects for flexibility
-- **Clarity** – Clean, commented, and readable code
-- **Event-Driven** – Tile and unit hooks drive interactions
-
-
-🧾 License
-This framework is open for educational and prototype use.
-You may freely modify, extend, or integrate it into your projects with attribution.
