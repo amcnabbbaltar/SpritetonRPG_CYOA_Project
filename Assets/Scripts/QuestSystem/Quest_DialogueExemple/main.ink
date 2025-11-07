@@ -12,3 +12,4 @@ VAR CollectCoinsQuestState = "REQUIREMENTS_NOT_MET"
 // ink files
 INCLUDE collect_coins_start_npc.ink
 INCLUDE collect_coins_finish_npc.ink
+INCLUDE npc_small_talk.ink
