@@ -29,6 +29,24 @@ public class PlayerEvents
         }
     }
 
+    public event Action<int> onPlayerCohesionLevelChange;
+    public void PlayerCohesionLevelChange(int level) 
+    {
+        if (onPlayerCohesionLevelChange != null) 
+        {
+            onPlayerCohesionLevelChange(level);
+        }
+    }
+
+    public event Action<int> onPlayerCohesionLevelGained;
+    public void PlayerCohesionLevelGained(int level) 
+    {
+        if (onPlayerCohesionLevelGained != null) 
+        {
+            onPlayerCohesionLevelGained(level);
+        }
+    }
+
     public event Action<int> onPlayerLevelChange;
     public void PlayerLevelChange(int level) 
     {

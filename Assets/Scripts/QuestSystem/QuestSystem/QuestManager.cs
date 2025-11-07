@@ -11,6 +11,7 @@ public class QuestManager : MonoBehaviour
 
     // quest start requirements
     private int currentPlayerLevel;
+    private int currentPlayerCohesionLevel;
 
     private void Awake()
     {
@@ -26,6 +27,8 @@ public class QuestManager : MonoBehaviour
         GameEventsManager.instance.questEvents.onQuestStepStateChange += QuestStepStateChange;
 
         GameEventsManager.instance.playerEvents.onPlayerLevelChange += PlayerLevelChange;
+        GameEventsManager.instance.playerEvents.onPlayerCohesionLevelChange += PlayerCohesionLevelChange;
+
     }
 
     private void OnDisable()
@@ -37,10 +40,14 @@ public class QuestManager : MonoBehaviour
         GameEventsManager.instance.questEvents.onQuestStepStateChange -= QuestStepStateChange;
 
         GameEventsManager.instance.playerEvents.onPlayerLevelChange -= PlayerLevelChange;
+        GameEventsManager.instance.playerEvents.onPlayerCohesionLevelChange -= PlayerCohesionLevelChange;
+
     }
 
     private void Start()
     {
+            
+
         
         foreach (Quest quest in questMap.Values)
         {
@@ -64,6 +71,11 @@ public class QuestManager : MonoBehaviour
     private void PlayerLevelChange(int level)
     {
         currentPlayerLevel = level;
+    }
+    //To establish current cohesion level for quest requirements
+    private void PlayerCohesionLevelChange(int Cohesionlevel)
+    {
+        currentPlayerCohesionLevel += Cohesionlevel;
     }
 
     private bool CheckRequirementsMet(Quest quest)
