@@ -12,6 +12,7 @@ public class QuestInfoSO : ScriptableObject
 
     [Header("Requirements")]
     public int levelRequirement;
+    public int CohesionlevelRequirement;
     public QuestInfoSO[] questPrerequisites;
 
     [Header("Steps")]
@@ -20,6 +21,7 @@ public class QuestInfoSO : ScriptableObject
     [Header("Rewards")]
     public int goldReward;
     public int experienceReward;
+    public int cohesionReward;
 
     // ensure the id is always the name of the Scriptable Object asset
     private void OnValidate()

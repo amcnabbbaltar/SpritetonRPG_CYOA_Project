@@ -75,7 +75,7 @@ public class QuestManager : MonoBehaviour
     //To establish current cohesion level for quest requirements
     private void PlayerCohesionLevelChange(int Cohesionlevel)
     {
-        currentPlayerCohesionLevel += Cohesionlevel;
+        currentPlayerCohesionLevel = Cohesionlevel;
     }
 
     private bool CheckRequirementsMet(Quest quest)
@@ -89,6 +89,12 @@ public class QuestManager : MonoBehaviour
             meetsRequirements = false;
         }
 
+        // check player Cohesion requirements
+        if (currentPlayerCohesionLevel < quest.info.CohesionlevelRequirement)
+        {
+            meetsRequirements = false;
+        }
+
         // check quest prerequisites for completion
         foreach (QuestInfoSO prerequisiteQuestInfo in quest.info.questPrerequisites)
         {
@@ -97,6 +103,7 @@ public class QuestManager : MonoBehaviour
                 meetsRequirements = false;
             }
         }
+        Debug.Log("FIRE! " + meetsRequirements);
 
         return meetsRequirements;
     }
@@ -109,6 +116,7 @@ public class QuestManager : MonoBehaviour
             // if we're now meeting the requirements, switch over to the CAN_START state
             if (quest.state == QuestState.REQUIREMENTS_NOT_MET && CheckRequirementsMet(quest))
             {
+
                 ChangeQuestState(quest.info.id, QuestState.CAN_START);
             }
         }
@@ -164,6 +172,8 @@ public class QuestManager : MonoBehaviour
     {
         // loads all QuestInfoSO Scriptable Objects under the Assets/Resources/Quests folder
         QuestInfoSO[] allQuests = Resources.LoadAll<QuestInfoSO>("Quests");
+        Debug.Log("Number of quests found: " + allQuests.Length);
+
         // Create the quest map
         Dictionary<string, Quest> idToQuestMap = new Dictionary<string, Quest>();
         foreach (QuestInfoSO questInfo in allQuests)

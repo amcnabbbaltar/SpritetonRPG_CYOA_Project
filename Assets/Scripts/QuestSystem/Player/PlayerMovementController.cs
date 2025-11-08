@@ -143,8 +143,8 @@ public class PlayerContinuousGridMovement : MonoBehaviour
     private void UpdateAnimator()
     {
         animator.SetBool("isWalking", isWalking);
-        animator.SetFloat("velocity_x", inputDir.x);
-        animator.SetFloat("velocity_y", inputDir.y);
+        //!animator.SetFloat("velocity_x", inputDir.x);
+       //!animator.SetFloat("velocity_y", inputDir.y);
     }
 
     // 🔹 Grid Helpers

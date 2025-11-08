@@ -39,7 +39,7 @@ public class InkDialogueVariables
             return; 
         }
         variables[name] = value;
-        // Debug.Log("Updated dialogue variable: " + name + " = " + value);
+        //Debug.Log("Updated dialogue variable: " + name + " = " + value);
     }
 
     private void SyncVariablesToStory(Story story)

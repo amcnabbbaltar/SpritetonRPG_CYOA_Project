@@ -36,10 +36,13 @@ public class DialogueManager : MonoBehaviour
         GameEventsManager.instance.dialogueEvents.onUpdateChoiceIndex += UpdateChoiceIndex;
         GameEventsManager.instance.dialogueEvents.onUpdateInkDialogueVariable += UpdateInkDialogueVariable;
         GameEventsManager.instance.questEvents.onQuestStateChange += QuestStateChange;
+        GameEventsManager.instance.playerEvents.onPlayerCohesionLevelChange += PlayerCohesionLevelChange;
+
     }
 
     private void OnDisable() 
     {
+        GameEventsManager.instance.playerEvents.onPlayerCohesionLevelChange -= PlayerCohesionLevelChange;
         GameEventsManager.instance.dialogueEvents.onEnterDialogue -= EnterDialogue;
         GameEventsManager.instance.inputEvents.onSubmitPressed -= SubmitPressed;
         GameEventsManager.instance.dialogueEvents.onUpdateChoiceIndex -= UpdateChoiceIndex;
@@ -53,6 +56,15 @@ public class DialogueManager : MonoBehaviour
             quest.info.id + "State",
             new StringValue(quest.state.ToString())
         );
+    }
+
+    //!!To establish current cohesion level for quest requirements
+    private void PlayerCohesionLevelChange(int Cohesionlevel)
+    {
+            GameEventsManager.instance.dialogueEvents.UpdateInkDialogueVariable(
+            "cohesionLevel",
+            new IntValue(Cohesionlevel)
+        );    
     }
 
     private void UpdateInkDialogueVariable(string name, Ink.Runtime.Object value) 
