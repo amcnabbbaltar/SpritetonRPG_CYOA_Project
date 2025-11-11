@@ -13,7 +13,7 @@ namespace Tactics2D
         [Header("References")]
         [SerializeField] private Camera mainCamera;
         [SerializeField] private TurnManager turnManager;
-        [SerializeField] private AllyDetector allyDetector;
+        //[SerializeField] private AllyDetector allyDetector;
 
         private Unit selectedUnit;
         private HashSet<GridCell> moveRange = new();
@@ -25,13 +25,15 @@ namespace Tactics2D
             if (mainCamera == null)
                 mainCamera = Camera.main;
 
-            allyDetector = GameObject.Find("Player").GetComponent<AllyDetector>();
 
-            if (allyDetector == null)
-            {
-                Debug.Log("ALLY DETECTOR SCRIPT NOT FOUND.");
-            }
-        }
+            //allyDetector = GameObject.Find(selectedUnit.ToString()).GetComponent<AllyDetector>();
+
+            //if (allyDetector == null)
+            //{
+            //    Debug.Log("ALLY DETECTOR SCRIPT NOT FOUND.");
+            //}
+    
+}
 
         private void Update()
         {
@@ -52,6 +54,8 @@ namespace Tactics2D
                 if (clickedCell.Occupant != null && clickedCell.Occupant.Team == Team.Player)
                 {
                     SelectUnit(clickedCell.Occupant);
+                    selectedUnit.GetComponent<AllyDetector>().FindAllies(); // Detecting allies nearby player clicked on
+
                 }
                 // Attack an enemy
                 else if (selectedUnit != null &&
@@ -60,8 +64,6 @@ namespace Tactics2D
                 {
                     StartCoroutine(PerformAttack(clickedCell.Occupant));
 
-                    // Detecting nearby allies only on enemy attack
-                    allyDetector.FindAllies();
                 }
                 // Move to empty cell
                 else if (selectedUnit != null &&
@@ -93,6 +95,8 @@ namespace Tactics2D
             );
 
             grid.Highlight(moveRange);
+
+            
         }
 
         private void ClearSelection()
