@@ -1,4 +1,9 @@
 === npcSmallTalk_Menu ===
+{ CollectCoinsQuestState != "FINISHED":
+    - # speaker:NPC
+      Sorry—come back after you’ve wrapped up that coin thing.
+      -> END
+}
 # speaker:NPC
 Hey there. Need something?
 
