@@ -95,23 +95,34 @@ namespace Tactics2D
             if (IsBusy) yield break;
 
             IsBusy = true;
-
-            // --- ANIM START ---
             if (animator)
                 animator.SetBool("isWalking", true);
 
             for (int i = 1; i < path.Count; i++)
             {
+                GridCell current = path[i - 1];
                 GridCell target = path[i];
+
+                // 🔹 Detect teleport link between consecutive path cells
+                if (TeleportSystem.Instance != null &&
+                    TeleportSystem.Instance.TryGetGroup(current, out string g1) &&
+                    TeleportSystem.Instance.TryGetGroup(target, out string g2) &&
+                    g1 == g2 && g1 != null)
+                {
+                    // Instantly perform teleport using TeleportSystem
+                    TeleportSystem.Instance.TryTeleport(this, current);
+                    yield return new WaitForSeconds(0.25f); // wait for reappear
+                    continue;
+                }
+
+                // 🔹 Normal walking movement
                 Vector3 start = transform.position;
                 Vector3 end = target.WorldCenter;
 
-                // --- FACE DIRECTION ---
+                // Face direction
                 if (spriteRenderer != null)
                 {
                     float dirX = end.x - start.x;
-
-                    // Flip horizontally if moving left, face right otherwise
                     if (Mathf.Abs(dirX) > 0.05f)
                         spriteRenderer.flipX = dirX < 0;
                 }
@@ -127,12 +138,13 @@ namespace Tactics2D
                 MoveIntoCell(target, instant: true);
             }
 
-            // --- ANIM END ---
             if (animator)
                 animator.SetBool("isWalking", false);
 
             IsBusy = false;
         }
+
+
 
         public void SetCurrentCell(GridCell newCell, bool updatePosition = true)
         {
