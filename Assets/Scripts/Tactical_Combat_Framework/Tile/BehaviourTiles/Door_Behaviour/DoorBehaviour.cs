@@ -17,12 +17,12 @@ namespace Tactics2D
 
         public void OnUnitEnter(Unit unit, GridManager grid)
         {
-            throw new System.NotImplementedException();
+            
         }
 
         public void OnUnitExit(Unit unit, GridManager grid)
         {
-            throw new System.NotImplementedException();
+            
         }
     }
 }

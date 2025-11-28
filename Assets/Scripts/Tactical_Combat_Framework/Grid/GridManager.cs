@@ -19,6 +19,7 @@ namespace Tactics2D
         [Header("External Systems")]
         [SerializeField] private TeleportSystem teleportSystem; // external modular system
         [SerializeField] private PressurePlateSystem pressurePlateSystem; // external modular system
+        [SerializeField] private ActionSystem actionSystem; // external modular system
 
         private readonly Dictionary<Vector3Int, GridCell> cells = new();
         private readonly Dictionary<Vector3Int, int> moveCost = new();
@@ -36,7 +37,8 @@ namespace Tactics2D
                 teleportSystem.Initialize(this);
             if (pressurePlateSystem != null)
                 pressurePlateSystem.Initialize(this);
-
+            if (actionSystem != null)
+                actionSystem.Initialize(this );
             BuildGridFromTilemap();
         }
 
@@ -84,7 +86,7 @@ namespace Tactics2D
 
                 if (dataTilemap.GetTile(p) is BehaviorTile bt && bt.behaviorAsset is ITileBehavior behavior)
                 {
-                    var instance = Object.Instantiate(bt.behaviorAsset) as ITileBehavior;
+                    var instance = (Object) Object.Instantiate(bt.behaviorAsset) as ITileBehavior;
                     tileBehaviors[p] = instance;
                     instance.Initialize(this, p);
                 }
@@ -143,6 +145,19 @@ namespace Tactics2D
                 behavior.OnUnitExit(unit, this);
         }
 
+        // ---------------- ACTION SYSTEM ----------------
+
+        public void ToggleWalkable(Vector3Int pos)
+        {
+            if (cells.TryGetValue(pos, out var cell))
+            {
+                
+                cells[pos].Walkable = !cells[pos].Walkable;
+                cells[pos].BlocksVision = !cells[pos].BlocksVision;
+            }
+        }
+
+        
         // ---------------- HIGHLIGHTING ----------------
 
         public void ClearHighlight() => highlightTilemap.ClearAllTiles();

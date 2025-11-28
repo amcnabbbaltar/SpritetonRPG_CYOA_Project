@@ -7,10 +7,9 @@ namespace Tactics2D
     public class ActionSystem : MonoBehaviour
     {
         public static ActionSystem Instance { get; private set; }
-        private readonly Dictionary<string, Vector3Int> doorPlates = new(); // tile -> group
-        private readonly Dictionary<string, int> doorGroupsStatus = new(); // group -> true | false
+        private readonly Dictionary<Vector3Int, string> _doorPlates = new(); // tile -> group
 
-        private GridManager grid;
+        private GridManager _grid;
 
         private void Awake()
         {
@@ -26,20 +25,41 @@ namespace Tactics2D
 
         public void Initialize(GridManager gridManager)
         {
-            grid = gridManager;
-            doorPlates.Clear();
-            doorGroupsStatus.Clear();
+            _grid = gridManager;
+            _doorPlates.Clear();
         }
 
         public void OpenDoor(string group)
         {
-            grid.Cells
-            doorPlates[group]
+            List<Vector3Int> doors = new();
+            
+            foreach (KeyValuePair<Vector3Int, string> value in _doorPlates)
+            {
+                if (value.Value == group)
+                {
+                    doors.Add(value.Key);
+                }
+            }
+            doors.ForEach(i => _grid.ToggleWalkable(i));
+        }
+        
+        public void CloseDoor(string group)
+        {
+            List<Vector3Int> doors = new();
+            
+            foreach (KeyValuePair<Vector3Int, string> value in _doorPlates)
+            {
+                if (value.Value == group)
+                {
+                    doors.Add(value.Key);
+                }
+            }
+            doors.ForEach(i => _grid.ToggleWalkable(i));
         }
 
         public void RegisterDoorTile(Vector3Int pos, string group)
         {
-            doorPlates.Add(group, pos);
+            _doorPlates.Add(pos, group);
         }
     }
 }

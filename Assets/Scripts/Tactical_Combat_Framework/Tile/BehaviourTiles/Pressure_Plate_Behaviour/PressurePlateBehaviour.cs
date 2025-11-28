@@ -7,6 +7,7 @@ namespace Tactics2D
     public class PressurePlateBehaviour : ScriptableObject, ITileBehavior
     {
         public string group = "A";
+        public bool repeat = true;
 
         public void Initialize(GridManager grid, Vector3Int pos)
         {
@@ -20,7 +21,8 @@ namespace Tactics2D
 
         public void OnUnitExit(Unit unit, GridManager grid)
         {
-            PressurePlateSystem.Instance.DeactivatePressurePlate(unit.CurrentCell.GridPos, group);
+            if (repeat)
+                PressurePlateSystem.Instance.DeactivatePressurePlate(unit.CurrentCell.GridPos, group);
         }
     }
 }

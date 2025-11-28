@@ -5,12 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="acee2ac7-dfc0-4cd3-9202-0f67a9da7164" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Tactical_Combat_Framework/Systems/PressurePlate/Interpreter.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Tactical_Combat_Framework/Systems/PressurePlate/Interpreter/InterpreterSystem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.SpritetonRPG_CYOA_Project/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SpritetonRPG_CYOA_Project/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Data/TileData/Data_TilePallet.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Data/TileData/Data_TilePallet.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Data/TileData/SpecialTiles/PressurePlates/Tile_Data/PressurePlate_A_2.asset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Data/TileData/SpecialTiles/PressurePlates/Tile_Data/PressurePlate_A_2.asset.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/PressurePlatesDemo.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/PressurePlatesDemo.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Tactical_Combat_Framework/Grid/GridManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Tactical_Combat_Framework/Grid/GridManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Tactical_Combat_Framework/Systems/PressurePlate/ActionSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Tactical_Combat_Framework/Systems/PressurePlate/ActionSystem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Tactical_Combat_Framework/Systems/PressurePlate/InterpreterSystem.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Tactical_Combat_Framework/Systems/PressurePlate/InterpreterSystem.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Tactical_Combat_Framework/Systems/PressurePlate/Interpreter/InterpreterSystem.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Tactical_Combat_Framework/Systems/PressurePlate/PressurePlateSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Tactical_Combat_Framework/Systems/PressurePlate/PressurePlateSystem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Tactical_Combat_Framework/Tile/BehaviourTiles/Door_Behaviour/DoorBehaviour.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Tactical_Combat_Framework/Tile/BehaviourTiles/Door_Behaviour/DoorBehaviour.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Tactical_Combat_Framework/Tile/BehaviourTiles/Pressure_Plate_Behaviour/PressurePlateBehaviour.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Tactical_Combat_Framework/Tile/BehaviourTiles/Pressure_Plate_Behaviour/PressurePlateBehaviour.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ProjectSettings/InkSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/InkSettings.asset" afterDir="false" />
     </list>
@@ -23,12 +28,12 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/6e08501fbd31449d8a9d1ee3fa987a5ba200/22/9fe8ba42/Tile.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/6e08501fbd31449d8a9d1ee3fa987a5ba200/4e/bb72c2d3/TileBase.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c648d86e9013479d818310c5918e31a4176600/eb/ed1a38e4/ScriptableObject.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://D:/UnityProjects/SpritetonRPG_CYOA_Project/Assets/Scripts/Tactical_Combat_Framework/Grid/GridManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/UnityProjects/SpritetonRPG_CYOA_Project/Assets/Scripts/Tactical_Combat_Framework/Grid/GridManager.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Tactical_Combat_Framework/Systems/PressurePlate/InterpreterSystem.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Tactical_Combat_Framework/Tile/BehaviourTiles/Door_Behaviour/DoorBehaviour.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 8
@@ -54,7 +59,7 @@
 }</component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
     <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\2022.3.55f1\Editor\Unity.exe" />
+      <option name="EXE_PATH" value="D:\Program Files\Unity\Hub\Editor\2022.3.55f1\Editor\Unity.exe" />
       <option name="PROGRAM_PARAMETERS" value="-projectPath &quot;C:\Users\cirla\OneDrive\Documents\Unity Games\SpritetonRPG_CYOA_Project&quot; -debugCodeOptimization" />
       <option name="WORKING_DIRECTORY" value="C:\Users\cirla\OneDrive\Documents\Unity Games\SpritetonRPG_CYOA_Project" />
       <option name="PASS_PARENT_ENVS" value="1" />
@@ -66,7 +71,7 @@
       <method v="2" />
     </configuration>
     <configuration name="Unit Tests (batch mode)" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\2022.3.55f1\Editor\Unity.exe" />
+      <option name="EXE_PATH" value="D:\Program Files\Unity\Hub\Editor\2022.3.55f1\Editor\Unity.exe" />
       <option name="PROGRAM_PARAMETERS" value="-runTests -batchmode -projectPath &quot;C:\Users\cirla\OneDrive\Documents\Unity Games\SpritetonRPG_CYOA_Project&quot; -testResults Logs/results.xml -logFile Logs/Editor.log -testPlatform EditMode -debugCodeOptimization" />
       <option name="WORKING_DIRECTORY" value="C:\Users\cirla\OneDrive\Documents\Unity Games\SpritetonRPG_CYOA_Project" />
       <option name="PASS_PARENT_ENVS" value="1" />
@@ -124,12 +129,15 @@
       <workItem from="1763326418361" duration="578000" />
       <workItem from="1763333114645" duration="3766000" />
       <workItem from="1764326188458" duration="4949000" />
+      <workItem from="1764340108624" duration="3366000" />
+      <workItem from="1764351187649" duration="4871000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="true" />
   <component name="UnityProjectDiscoverer">
     <option name="hasUnityReference" value="true" />
