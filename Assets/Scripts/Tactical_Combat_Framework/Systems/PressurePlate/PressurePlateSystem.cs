@@ -18,7 +18,7 @@ namespace Tactics2D
         private readonly Dictionary<string, bool> pressurePlateGroupsStatus = new(); // group -> true | false
 
         private GridManager grid;
-        private InterpreterSystem _interpreter;
+        private IInterpreter interpreter;
         
         
         private void Awake()
@@ -39,7 +39,7 @@ namespace Tactics2D
         /// <param name="gridManager"></param>
         public void Initialize(GridManager gridManager)
         {
-            _interpreter = new InterpreterSystem();
+            interpreter = GetComponent<IInterpreter>();
             grid = gridManager;
             pressurePlates.Clear();
             pressurePlatesStatus.Clear();
@@ -68,7 +68,7 @@ namespace Tactics2D
             if (pressurePlateGroups[group] == count)
             {
                 pressurePlateGroupsStatus[group] = true;
-                _interpreter.ActivateTrigger(group);
+                interpreter.ActivateTrigger(group);
                 // DO SOMETHING
                 Debug.Log($"[PressurePlatesSystem] Trigger {group}");
             }
@@ -85,7 +85,7 @@ namespace Tactics2D
         {
             if (pressurePlateGroupsStatus[group])
             {
-                _interpreter.DeactivateTrigger(group);
+                interpreter.DeactivateTrigger(group);
                 Debug.Log($"[PressurePlatesSystem] Group Bye Bye {group}");
             }
 
