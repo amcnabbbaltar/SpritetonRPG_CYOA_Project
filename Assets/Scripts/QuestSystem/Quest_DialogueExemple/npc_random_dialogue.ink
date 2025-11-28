@@ -13,7 +13,6 @@ What can I do for ya?
     I don't know it's my first day out here!
     -> npc_Random_Dialogue
 
-
 + [Can you take me to the team fight area ?]
     # speaker:NPC
     Sure thing, let’s go.
