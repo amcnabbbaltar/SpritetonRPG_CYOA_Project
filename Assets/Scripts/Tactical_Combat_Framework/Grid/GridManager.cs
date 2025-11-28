@@ -18,6 +18,7 @@ namespace Tactics2D
 
         [Header("External Systems")]
         [SerializeField] private TeleportSystem teleportSystem; // external modular system
+        [SerializeField] private PressurePlateSystem pressurePlateSystem; // external modular system
 
         private readonly Dictionary<Vector3Int, GridCell> cells = new();
         private readonly Dictionary<Vector3Int, int> moveCost = new();
@@ -33,6 +34,8 @@ namespace Tactics2D
             // Initialize linked systems
             if (teleportSystem != null)
                 teleportSystem.Initialize(this);
+            if (pressurePlateSystem != null)
+                pressurePlateSystem.Initialize(this);
 
             BuildGridFromTilemap();
         }

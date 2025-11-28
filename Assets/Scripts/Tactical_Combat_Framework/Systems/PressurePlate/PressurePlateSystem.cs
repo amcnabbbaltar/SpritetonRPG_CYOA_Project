@@ -1,18 +1,21 @@
-﻿using System.Collections.Generic;
+﻿
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Tactics2D
 {
     /// <summary>
-    /// 
+    ///     
     /// </summary>
     public class PressurePlateSystem : MonoBehaviour
     {
         public static PressurePlateSystem Instance { get; private set; }
 
-        private readonly Dictionary<Vector3Int, string> pressurePlateGroups = new(); // tile -> group
-        private readonly Dictionary<Vector3Int, bool> pressurePlatesActivated = new(); // tile -> group
+        private readonly Dictionary<Vector3Int, string> pressurePlates = new(); // tile -> group
+        private readonly Dictionary<Vector3Int, bool> pressurePlatesStatus = new(); // pos -> true | false
+        private readonly Dictionary<string, int> pressurePlateGroups = new(); // group -> count
+        private readonly Dictionary<string, bool> pressurePlateGroupsStatus = new(); // group -> true | false
 
         private GridManager grid;
 
@@ -28,39 +31,80 @@ namespace Tactics2D
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gridManager"></param>
         public void Initialize(GridManager gridManager)
         {
             grid = gridManager;
+            pressurePlates.Clear();
+            pressurePlatesStatus.Clear();
             pressurePlateGroups.Clear();
-            pressurePlatesActivated.Clear();
+            pressurePlateGroupsStatus.Clear();
         }
 
-        public void ActivatePressurePlate(string group)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="group"></param>
+        /// <param name="action"></param>
+        public void ActivatePressurePlate(Vector3Int pos, string group)
         {
-            Dictionary<Vector3Int, string> pressurePlates = new();
-            bool allActive = true;
-            foreach (var pressurePlateGroup in pressurePlateGroups)
+            pressurePlatesStatus[pos] = true;
+            int count = 0;
+            foreach (var pressurePlate in pressurePlates)
             {
-                if (pressurePlateGroup.Value == group)
+                if (pressurePlate.Value == group && pressurePlatesStatus[pressurePlate.Key])
                 {
-                    if (pressurePlatesActivated[pressurePlateGroup.Key])
-                    {
-                        allActive = false;
-                    }
-                    pressurePlates.Add(pressurePlateGroup.Key, pressurePlateGroup.Value);
+                    count += 1;
                 }
             }
-            
-            // pressurePlates = pressurePlateGroups.ContainsValue(group);
+
+            if (pressurePlateGroups[group] == count)
+            {
+                pressurePlateGroupsStatus[group] = true;
+                // DO SOMETHING
+                Debug.Log($"[PressurePlatesSystem] Trigger {group}");
+            }
+            Debug.Log($"[PressurePlatesSystem] Comes {group}");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="group"></param>
+        /// <param name="action"></param>
+        public void DeactivatePressurePlate(Vector3Int pos, string group)
+        {
+            if (pressurePlateGroupsStatus[group])
+            {
+                Debug.Log($"[PressurePlatesSystem] Group Bye Bye {group}");
+            }
+
+            pressurePlatesStatus[pos] = false;
+            Debug.Log($"[PressurePlatesSystem] Leaves {group}");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="group"></param>
         public void RegisterPressurePlate(Vector3Int pos, string group)
         {
-            pressurePlateGroups[pos] = group;
-
-            if (!pressurePlatesActivated.ContainsKey(pos))
+            pressurePlates.Add(pos, group);
+            pressurePlatesStatus.Add(pos, false);
+            if (!pressurePlateGroups.ContainsKey(group))
             {
-                pressurePlatesActivated.Add(pos, false);
+                pressurePlateGroupsStatus.Add(group, false);
+                pressurePlateGroups.Add(group, 1);
+            }
+            else
+            {
+                pressurePlateGroups[group] += 1;
             }
         }
     }
