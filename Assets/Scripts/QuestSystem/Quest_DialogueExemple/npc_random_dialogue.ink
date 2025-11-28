@@ -13,11 +13,11 @@ What can I do for ya?
     I don't know it's my first day out here!
     -> npc_Random_Dialogue
 
-+ [You like to play games?]
++ [Can you take me to the team fight area ?]
     # speaker:NPC
-    I like to play some games on my phone from time to time, it involves 
-    flowers and the undead or something like that.
-    -> npc_Random_Dialogue
+    Sure thing, let’s go.
+    ~ SwitchScene("TRPG_Exemple")
+    -> END
 
 * [That’s all. Thanks!]
     # speaker:NPC

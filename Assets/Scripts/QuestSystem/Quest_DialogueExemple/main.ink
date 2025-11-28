@@ -2,6 +2,7 @@
 EXTERNAL StartQuest(questId)
 EXTERNAL AdvanceQuest(questId)
 EXTERNAL FinishQuest(questId)
+EXTERNAL SwitchScene(sceneName)
 
 // quest ids (questId + "Id" for variable name)
 VAR CollectCoinsQuestId = "CollectCoinsQuest"
@@ -16,4 +17,3 @@ INCLUDE collect_coins_start_npc.ink
 INCLUDE collect_coins_finish_npc.ink
 INCLUDE npc_small_talk.ink
 INCLUDE npc_random_dialogue.ink
-
