@@ -1,17 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CohesionManager : MonoBehaviour
 {
     [Header("Configuration")]
     [SerializeField] private int startingCohesionLevel = 3;
 
+    private static CohesionManager instance;
+
     public int currentPlayerCohesionLevel { get; private set; }
 
     private void Awake()
     {
-        currentPlayerCohesionLevel = startingCohesionLevel;
+        currentPlayerCohesionLevel = startingCohesionLevel; //give it a starting level
     }
 
     private void OnEnable() 
@@ -25,8 +28,6 @@ public class CohesionManager : MonoBehaviour
     {
         GameEventsManager.instance.playerEvents.onPlayerCohesionLevelGained -= PlayerCohesionLevelGained;
        // GameEventsManager.instance.playerEvents.onPlayerLevelChange -= onPlayerLevelChange;
-
-
 
     }
 

@@ -103,7 +103,7 @@ public class QuestManager : MonoBehaviour
                 meetsRequirements = false;
             }
         }
-        Debug.Log("FIRE! " + meetsRequirements);
+        //Debug.Log("QuestReqMet! " + meetsRequirements);
 
         return meetsRequirements;
     }

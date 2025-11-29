@@ -55,7 +55,6 @@ namespace Tactics2D
                 {
                     SelectUnit(clickedCell.Occupant);
                     selectedUnit.GetComponent<AllyDetector>().FindAllies(); // Detecting allies nearby player clicked on
-
                 }
                 // Attack an enemy
                 else if (selectedUnit != null &&
