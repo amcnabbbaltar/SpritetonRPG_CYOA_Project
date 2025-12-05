@@ -157,6 +157,12 @@ namespace Tactics2D
             }
         }
 
+        public Vector3 GetCellPosition(Vector3Int pos)
+        {
+            
+            return cells[pos].WorldCenter;;
+        }
+
         // ---------------- HIGHLIGHTING ----------------
 
         public void ClearHighlight() => highlightTilemap.ClearAllTiles();

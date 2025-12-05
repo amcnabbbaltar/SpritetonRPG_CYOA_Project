@@ -9,6 +9,7 @@ namespace Tactics2D
         [Header("Pressure Plate Settings")]
         [SerializeField] public string group = "A";
         [SerializeField] public bool reset = true;
+        [SerializeField] public GameObject effect;
 
         private bool _activated = false;
         
@@ -19,7 +20,7 @@ namespace Tactics2D
         /// <param name="pos">Pressure plate position</param>
         public void Initialize(GridManager grid, Vector3Int pos)
         {
-            PressurePlateSystem.Instance.RegisterPressurePlate(pos, group);
+            PressurePlateSystem.Instance.RegisterPressurePlate(pos, group, effect);
         }
 
         /// <summary>

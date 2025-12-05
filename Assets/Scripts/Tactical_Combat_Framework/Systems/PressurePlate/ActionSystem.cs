@@ -52,8 +52,12 @@ namespace Tactics2D
             doors.ForEach(i => _grid.ToggleWalkable(i));
             doors.ForEach(i =>
             {
+                print($"[Door Effect] Maybe ${i} : ${_grid.GetCellPosition(i)} but {_doorEffects.ContainsKey(i)}");
                 if (_doorEffects.TryGetValue(i, out var fx))
-                    Instantiate(fx, i, Quaternion.identity);
+                {
+                    print($"[Door Effect]{i}");
+                    Instantiate(fx, _grid.GetCellPosition(i), Quaternion.identity);
+                }
             });
         }
         
@@ -83,7 +87,7 @@ namespace Tactics2D
         public void RegisterDoorTile(Vector3Int pos, string group, GameObject fx = null)
         {
             _doorPlates.Add(pos, group);
-            if (!fx)
+            if (fx)
                 _doorEffects.Add(pos, fx);
         }
     }
