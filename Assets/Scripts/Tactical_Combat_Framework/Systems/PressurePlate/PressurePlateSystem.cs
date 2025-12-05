@@ -12,13 +12,13 @@ namespace Tactics2D
     {
         public static PressurePlateSystem Instance { get; private set; }
 
-        private readonly Dictionary<Vector3Int, string> pressurePlates = new(); // tile -> group
-        private readonly Dictionary<Vector3Int, bool> pressurePlatesStatus = new(); // pos -> true | false
+        private readonly Dictionary<Vector3Int, string> pressurePlates = new(); // tile pos -> group
+        private readonly Dictionary<Vector3Int, bool> pressurePlatesStatus = new(); // tile pos -> true | false
         private readonly Dictionary<string, int> pressurePlateGroups = new(); // group -> count
         private readonly Dictionary<string, bool> pressurePlateGroupsStatus = new(); // group -> true | false
-
+        
         private GridManager grid;
-        private IInterpreter interpreter;
+        private IPressurePlateInterpreter pressurePlateInterpreter; // Interpreter for the actions
         
         
         private void Awake()
@@ -34,12 +34,12 @@ namespace Tactics2D
         }
 
         /// <summary>
-        /// 
+        /// Clears all dictionaries and initializes the gridManager and interpreter
         /// </summary>
         /// <param name="gridManager"></param>
         public void Initialize(GridManager gridManager)
         {
-            interpreter = GetComponent<IInterpreter>();
+            pressurePlateInterpreter = GetComponent<IPressurePlateInterpreter>();
             grid = gridManager;
             pressurePlates.Clear();
             pressurePlatesStatus.Clear();
@@ -48,11 +48,11 @@ namespace Tactics2D
         }
 
         /// <summary>
-        /// 
+        /// Turns on the given pressure plate position of that group.
+        /// If all pressure plates in that group are active, activate the interpreter.
         /// </summary>
-        /// <param name="pos"></param>
-        /// <param name="group"></param>
-        /// <param name="action"></param>
+        /// <param name="pos">Pressure plate position</param>
+        /// <param name="group">Pressure plate group</param>
         public void ActivatePressurePlate(Vector3Int pos, string group)
         {
             pressurePlatesStatus[pos] = true;
@@ -68,36 +68,31 @@ namespace Tactics2D
             if (pressurePlateGroups[group] == count)
             {
                 pressurePlateGroupsStatus[group] = true;
-                interpreter.ActivateTrigger(group);
-                // DO SOMETHING
-                Debug.Log($"[PressurePlatesSystem] Trigger {group}");
+                pressurePlateInterpreter.ActivateTrigger(group);
             }
-            Debug.Log($"[PressurePlatesSystem] Comes {group}");
         }
 
         /// <summary>
-        /// 
+        /// Turns off the given pressure plate position of that group.
+        /// If the group of pressure plates was active, deactivate the interpreter.
         /// </summary>
-        /// <param name="pos"></param>
-        /// <param name="group"></param>
-        /// <param name="action"></param>
+        /// <param name="pos">Pressure plate position</param>
+        /// <param name="group">Pressure plate group</param>
         public void DeactivatePressurePlate(Vector3Int pos, string group)
         {
             if (pressurePlateGroupsStatus[group])
             {
-                interpreter.DeactivateTrigger(group);
-                Debug.Log($"[PressurePlatesSystem] Group Bye Bye {group}");
+                pressurePlateInterpreter.DeactivateTrigger(group);
             }
 
             pressurePlatesStatus[pos] = false;
-            Debug.Log($"[PressurePlatesSystem] Leaves {group}");
         }
 
         /// <summary>
-        /// 
+        /// Adds the pressure plate to the dictionaries
         /// </summary>
-        /// <param name="pos"></param>
-        /// <param name="group"></param>
+        /// <param name="pos">Pressure plate position</param>
+        /// <param name="group">Pressure plate group</param>
         public void RegisterPressurePlate(Vector3Int pos, string group)
         {
             pressurePlates.Add(pos, group);

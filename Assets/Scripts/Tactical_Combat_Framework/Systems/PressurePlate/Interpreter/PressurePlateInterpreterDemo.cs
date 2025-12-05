@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 namespace Tactics2D
 {
-    public class InterpreterSystem: MonoBehaviour, IInterpreter
+    public class PressurePlateInterpreterDemo: MonoBehaviour, IPressurePlateInterpreter
     {
 
         public void ActivateTrigger(string group)

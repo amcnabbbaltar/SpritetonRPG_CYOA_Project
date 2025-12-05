@@ -157,7 +157,6 @@ namespace Tactics2D
             }
         }
 
-        
         // ---------------- HIGHLIGHTING ----------------
 
         public void ClearHighlight() => highlightTilemap.ClearAllTiles();
