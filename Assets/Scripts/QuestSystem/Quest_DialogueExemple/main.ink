@@ -17,3 +17,4 @@ INCLUDE collect_coins_start_npc.ink
 INCLUDE collect_coins_finish_npc.ink
 INCLUDE npc_small_talk.ink
 INCLUDE npc_random_dialogue.ink
+INCLUDE npc_trpg.ink
