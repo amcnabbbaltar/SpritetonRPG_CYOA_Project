@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 namespace Tactics2D
 {
@@ -22,6 +23,7 @@ namespace Tactics2D
                     break;
                 case "C":
                     Debug.Log("Activate Action C");
+                    SceneManager.LoadScene("Scenes/Town_Exemple");
                     break;
                 default:
                     Debug.Log("Not Defined");
