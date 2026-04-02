@@ -1,43 +1,41 @@
-﻿
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Tactics2D
 {
-    /// <summary>
-    ///     
-    /// </summary>
     public class PressurePlateSystem : MonoBehaviour
     {
         public static PressurePlateSystem Instance { get; private set; }
 
         private readonly Dictionary<Vector3Int, string> pressurePlates = new(); // tile pos -> group
-        private readonly Dictionary<Vector3Int, bool> pressurePlatesStatus = new(); // tile pos -> true | false
-        private readonly Dictionary<string, int> pressurePlateGroups = new(); // group -> count
-        private readonly Dictionary<string, bool> pressurePlateGroupsStatus = new(); // group -> true | false
-        private readonly Dictionary<Vector3Int, GameObject> pressurePlateFx = new(); // tile pos -> effect
-        
+        private readonly Dictionary<Vector3Int, bool> pressurePlatesStatus = new(); // tile pos -> active state
+        private readonly Dictionary<string, int> pressurePlateGroups = new(); // group -> total count
+        private readonly Dictionary<string, bool> pressurePlateGroupsStatus = new(); // group -> active state
+
+        // Animator (prefab-based)
+        private readonly Dictionary<Vector3Int, Animator> pressurePlateAnimators = new();
+        private readonly Dictionary<Vector3Int, string> pressurePlateActivateTriggers = new();
+        private readonly Dictionary<Vector3Int, string> pressurePlateDeactivateTriggers = new();
+
+        // Sprite swap (prefab SpriteRenderer or plain SpriteRenderer)
+        private readonly Dictionary<Vector3Int, SpriteRenderer> pressurePlateRenderers = new();
+        private readonly Dictionary<Vector3Int, Sprite> pressurePlateActiveSprites = new();
+        private readonly Dictionary<Vector3Int, Sprite> pressurePlateInactiveSprites = new();
+
         private GridManager grid;
-        private IPressurePlateInterpreter pressurePlateInterpreter; // Interpreter for the actions
-        
-        
+        private IPressurePlateInterpreter pressurePlateInterpreter;
+
         private void Awake()
         {
             if (Instance != null && Instance != this)
-            {
                 Destroy(gameObject);
-            }
             else
-            {
                 Instance = this;
-            }
         }
 
         /// <summary>
-        /// Clears all dictionaries and initializes the gridManager and interpreter
+        /// Clears all dictionaries and initializes the gridManager and interpreter.
         /// </summary>
-        /// <param name="gridManager"></param>
         public void Initialize(GridManager gridManager)
         {
             pressurePlateInterpreter = GetComponent<IPressurePlateInterpreter>();
@@ -46,20 +44,65 @@ namespace Tactics2D
             pressurePlatesStatus.Clear();
             pressurePlateGroups.Clear();
             pressurePlateGroupsStatus.Clear();
+            pressurePlateAnimators.Clear();
+            pressurePlateActivateTriggers.Clear();
+            pressurePlateDeactivateTriggers.Clear();
+            pressurePlateRenderers.Clear();
+            pressurePlateActiveSprites.Clear();
+            pressurePlateInactiveSprites.Clear();
         }
 
         /// <summary>
-        /// Adds the pressure plate to the dictionaries
+        /// Registers a pressure plate and spawns its world-space visual.
+        /// If a prefab is provided it is instantiated; its Animator and SpriteRenderer are used if present.
+        /// If no prefab is provided but sprites are set, a plain SpriteRenderer GameObject is spawned instead.
         /// </summary>
-        /// <param name="pos">Pressure plate position</param>
-        /// <param name="group">Pressure plate group</param>
-        /// <param name="fx">Pressure plate effect</param>
-        public void RegisterPressurePlate(Vector3Int pos, string group, GameObject fx = null)
+        public void RegisterPressurePlate(
+            Vector3Int pos, string group, Vector3 worldPos,
+            GameObject visualPrefab = null,
+            string activateTrigger = null, string deactivateTrigger = null,
+            Sprite inactiveSprite = null, Sprite activeSprite = null)
         {
             pressurePlates.Add(pos, group);
             pressurePlatesStatus.Add(pos, false);
-            if (fx)
-                pressurePlateFx.Add(pos, fx);
+
+            if (visualPrefab != null)
+            {
+                var instance = Instantiate(visualPrefab, worldPos, Quaternion.identity);
+
+                var animator = instance.GetComponent<Animator>();
+                if (animator != null)
+                {
+                    pressurePlateAnimators.Add(pos, animator);
+                    if (!string.IsNullOrEmpty(activateTrigger))   pressurePlateActivateTriggers.Add(pos, activateTrigger);
+                    if (!string.IsNullOrEmpty(deactivateTrigger)) pressurePlateDeactivateTriggers.Add(pos, deactivateTrigger);
+                }
+
+                // Also support sprite swap on the prefab's SpriteRenderer if sprites are assigned
+                if (inactiveSprite != null || activeSprite != null)
+                {
+                    var sr = instance.GetComponent<SpriteRenderer>();
+                    if (sr != null)
+                    {
+                        sr.sprite = inactiveSprite;
+                        pressurePlateRenderers.Add(pos, sr);
+                        if (inactiveSprite != null) pressurePlateInactiveSprites.Add(pos, inactiveSprite);
+                        if (activeSprite != null)   pressurePlateActiveSprites.Add(pos, activeSprite);
+                    }
+                }
+            }
+            else if (inactiveSprite != null || activeSprite != null)
+            {
+                // No prefab — spawn a plain SpriteRenderer GameObject
+                var go = new GameObject($"PressurePlate_Visual_{pos}");
+                go.transform.position = worldPos;
+                var sr = go.AddComponent<SpriteRenderer>();
+                sr.sprite = inactiveSprite;
+                pressurePlateRenderers.Add(pos, sr);
+                if (inactiveSprite != null) pressurePlateInactiveSprites.Add(pos, inactiveSprite);
+                if (activeSprite != null)   pressurePlateActiveSprites.Add(pos, activeSprite);
+            }
+
             if (!pressurePlateGroups.ContainsKey(group))
             {
                 pressurePlateGroupsStatus.Add(group, false);
@@ -70,26 +113,26 @@ namespace Tactics2D
                 pressurePlateGroups[group] += 1;
             }
         }
-        
+
         /// <summary>
-        /// Turns on the given pressure plate position of that group.
-        /// If all pressure plates in that group are active, activate the interpreter.
+        /// Activates a pressure plate: fires its animator trigger and/or swaps its sprite.
+        /// If all plates in the group are active, fires the interpreter.
         /// </summary>
-        /// <param name="pos">Pressure plate position</param>
-        /// <param name="group">Pressure plate group</param>
         public void ActivatePressurePlate(Vector3Int pos, string group)
         {
             pressurePlatesStatus[pos] = true;
 
-            if (pressurePlateFx.TryGetValue(pos, out var fx))
-                Instantiate(fx, grid.GetCellPosition(pos), Quaternion.identity);
+            if (pressurePlateAnimators.TryGetValue(pos, out var animator) && pressurePlateActivateTriggers.TryGetValue(pos, out var animTrigger))
+                animator.SetTrigger(animTrigger);
+
+            if (pressurePlateRenderers.TryGetValue(pos, out var sr) && pressurePlateActiveSprites.TryGetValue(pos, out var activeSprite))
+                sr.sprite = activeSprite;
+
             int count = 0;
-            foreach (var pressurePlate in pressurePlates)
+            foreach (var plate in pressurePlates)
             {
-                if (pressurePlate.Value == group && pressurePlatesStatus[pressurePlate.Key])
-                {
-                    count += 1;
-                }
+                if (plate.Value == group && pressurePlatesStatus[plate.Key])
+                    count++;
             }
 
             if (pressurePlateGroups[group] == count)
@@ -100,21 +143,21 @@ namespace Tactics2D
         }
 
         /// <summary>
-        /// Turns off the given pressure plate position of that group.
-        /// If the group of pressure plates was active, deactivate the interpreter.
+        /// Deactivates a pressure plate: fires its animator trigger and/or swaps its sprite back.
+        /// If the group was active, fires the interpreter deactivation.
         /// </summary>
-        /// <param name="pos">Pressure plate position</param>
-        /// <param name="group">Pressure plate group</param>
         public void DeactivatePressurePlate(Vector3Int pos, string group)
         {
             if (pressurePlateGroupsStatus[group])
-            {
                 pressurePlateInterpreter.DeactivateTrigger(group);
-            }
 
             pressurePlatesStatus[pos] = false;
+
+            if (pressurePlateAnimators.TryGetValue(pos, out var animator) && pressurePlateDeactivateTriggers.TryGetValue(pos, out var animTrigger))
+                animator.SetTrigger(animTrigger);
+
+            if (pressurePlateRenderers.TryGetValue(pos, out var sr) && pressurePlateInactiveSprites.TryGetValue(pos, out var inactiveSprite))
+                sr.sprite = inactiveSprite;
         }
-
-
     }
 }

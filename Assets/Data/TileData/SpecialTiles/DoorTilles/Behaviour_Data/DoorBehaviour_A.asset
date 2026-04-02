@@ -13,4 +13,8 @@ MonoBehaviour:
   m_Name: DoorBehaviour_A
   m_EditorClassIdentifier: 
   group: A
-  doorEffect: {fileID: 7097428995097767524, guid: 30ff9b3aca00abe48b2eeea634bd61c8, type: 3}
+  doorPrefab: {fileID: 530836532401276633, guid: 6f669e854c59bb841accbd68e19a28ad, type: 3}
+  openTrigger: Open
+  closeTrigger: Close
+  closedSprite: {fileID: 21300000, guid: 3e57d271cd28037478288c8a868bd4c9, type: 2}
+  openSprite: {fileID: 0}

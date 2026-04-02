@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Tactics2D;
 using UnityEngine;
 
 namespace Tactics2D
@@ -10,36 +7,39 @@ namespace Tactics2D
     {
         [Header("Door Settings")]
         [SerializeField] public string group = "A";
-        [SerializeField] public GameObject doorEffect;
+        [Tooltip("VFX prefab instantiated once at the door's position when the door opens.")]
+        [SerializeField] public GameObject openEffect;
+
+        [Header("Visual Prefab")]
+        [Tooltip("Prefab spawned in the world at this tile. Requires an Animator for trigger-based animation.")]
+        [SerializeField] public GameObject doorPrefab;
+        [SerializeField] public string openTrigger = "Open";
+        [SerializeField] public string closeTrigger = "Close";
+
+        [Header("Sprite Swap")]
+        [Tooltip("Used when no prefab is assigned (spawns a plain SpriteRenderer), or alongside a prefab that has a SpriteRenderer.")]
+        [SerializeField] public Sprite closedSprite;
+        [SerializeField] public Sprite openSprite;
 
         /// <summary>
         /// Register Door in Action System
         /// </summary>
-        /// <param name="grid">Grid manager</param>
-        /// <param name="pos">Pressure plate position</param>
         public void Initialize(GridManager grid, Vector3Int position)
         {
-            ActionSystem.Instance.RegisterDoorTile(position, group, doorEffect);
+            ActionSystem.Instance.RegisterDoorTile(
+                position, group, grid.GetCellPosition(position),
+                doorPrefab, openTrigger, closeTrigger,
+                closedSprite, openSprite, openEffect);
         }
 
         /// <summary>
-        /// [Does Nothing] Activate Door in Action System when entered
+        /// [Does Nothing] Doors are controlled by the ActionSystem via pressure plates
         /// </summary>
-        /// <param name="unit">Unit</param>
-        /// <param name="grid">Grid manager</param>
-        public void OnUnitEnter(Unit unit, GridManager grid)
-        {
-            
-        }
+        public void OnUnitEnter(Unit unit, GridManager grid) { }
 
         /// <summary>
-        /// [Does Nothing] Deactivate Door in Action System when leaves
+        /// [Does Nothing] Doors are controlled by the ActionSystem via pressure plates
         /// </summary>
-        /// <param name="unit">Unit</param>
-        /// <param name="grid">Grid manager</param>
-        public void OnUnitExit(Unit unit, GridManager grid)
-        {
-            
-        }
+        public void OnUnitExit(Unit unit, GridManager grid) { }
     }
 }

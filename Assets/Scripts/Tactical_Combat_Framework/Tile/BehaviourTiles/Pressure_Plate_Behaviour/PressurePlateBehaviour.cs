@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Tactics2D
@@ -9,25 +8,34 @@ namespace Tactics2D
         [Header("Pressure Plate Settings")]
         [SerializeField] public string group = "A";
         [SerializeField] public bool reset = true;
-        [SerializeField] public GameObject effect;
+
+        [Header("Visual Prefab")]
+        [Tooltip("Prefab spawned in the world at this tile. Requires an Animator for trigger-based animation.")]
+        [SerializeField] public GameObject visualPrefab;
+        [SerializeField] public string activateTrigger = "Activate";
+        [SerializeField] public string deactivateTrigger = "Deactivate";
+
+        [Header("Sprite Swap")]
+        [Tooltip("Used when no prefab is assigned (spawns a plain SpriteRenderer), or alongside a prefab that has a SpriteRenderer.")]
+        [SerializeField] public Sprite inactiveSprite;
+        [SerializeField] public Sprite activeSprite;
 
         private bool _activated = false;
-        
+
         /// <summary>
         /// Register Pressure Plate in System
         /// </summary>
-        /// <param name="grid">Grid manager</param>
-        /// <param name="pos">Pressure plate position</param>
         public void Initialize(GridManager grid, Vector3Int pos)
         {
-            PressurePlateSystem.Instance.RegisterPressurePlate(pos, group, effect);
+            PressurePlateSystem.Instance.RegisterPressurePlate(
+                pos, group, grid.GetCellPosition(pos),
+                visualPrefab, activateTrigger, deactivateTrigger,
+                inactiveSprite, activeSprite);
         }
 
         /// <summary>
         /// Activate Pressure Plate System when entered
         /// </summary>
-        /// <param name="unit">Unit</param>
-        /// <param name="grid">Grid manager</param>
         public void OnUnitEnter(Unit unit, GridManager grid)
         {
             if (reset || !_activated)
@@ -38,10 +46,8 @@ namespace Tactics2D
         }
 
         /// <summary>
-        /// Deactivate  Pressure Plate System when leaves
+        /// Deactivate Pressure Plate System when leaves
         /// </summary>
-        /// <param name="unit">Unit</param>
-        /// <param name="grid">Grid manager</param>
         public void OnUnitExit(Unit unit, GridManager grid)
         {
             if (reset)

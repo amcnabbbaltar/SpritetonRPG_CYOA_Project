@@ -13,4 +13,7 @@ MonoBehaviour:
   m_Name: PressurePlateBehaviour_A
   m_EditorClassIdentifier: 
   group: A
-  repeat: 0
+  reset: 1
+  visualPrefab: {fileID: 0}
+  activateTrigger: Activate
+  deactivateTrigger: Deactivate
