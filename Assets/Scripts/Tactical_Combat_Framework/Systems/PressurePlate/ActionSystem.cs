@@ -65,7 +65,7 @@ namespace Tactics2D
             {
                 var instance = Instantiate(doorPrefab, worldPos, Quaternion.identity);
 
-                var animator = instance.GetComponent<Animator>();
+                var animator = instance.GetComponentInChildren<Animator>();
                 if (animator != null)
                 {
                     _doorAnimators.Add(pos, animator);

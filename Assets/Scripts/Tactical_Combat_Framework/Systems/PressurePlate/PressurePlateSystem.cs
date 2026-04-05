@@ -70,7 +70,7 @@ namespace Tactics2D
             {
                 var instance = Instantiate(visualPrefab, worldPos, Quaternion.identity);
 
-                var animator = instance.GetComponent<Animator>();
+                var animator = instance.GetComponentInChildren<Animator>();
                 if (animator != null)
                 {
                     pressurePlateAnimators.Add(pos, animator);

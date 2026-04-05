@@ -17,6 +17,7 @@ namespace Tactics2D
 
         private Unit selectedUnit;
         private HashSet<GridCell> moveRange = new();
+        private HashSet<Unit> _actedThisPhase = new();
         private GridManager grid;
 
         private void Start()
@@ -81,9 +82,20 @@ namespace Tactics2D
         }
 
         #region Selection
+        /// <summary>Called by TurnManager at the start of each player phase to reset acted units.</summary>
+        public void OnPlayerPhaseStart()
+        {
+            _actedThisPhase.Clear();
+        }
+
         private void SelectUnit(Unit unit)
         {
             if (unit == null || !unit.IsAlive) return;
+            if (_actedThisPhase.Contains(unit))
+            {
+                Debug.Log($"[PlayerController] {unit.name} has already acted this turn.");
+                return;
+            }
 
             selectedUnit = unit;
 
@@ -120,9 +132,10 @@ namespace Tactics2D
             }
 
             grid.ClearHighlight();
+            var unitThatMoved = selectedUnit;
             yield return StartCoroutine(selectedUnit.MoveAlong(path));
 
-            turnManager.EndTurn();
+            turnManager.UnitEndedTurn(unitThatMoved);
             ClearSelection();
         }
 
@@ -132,6 +145,7 @@ namespace Tactics2D
                 yield break;
 
             // Find attack action in this unit’s list
+            var unitThatAttacked = selectedUnit;
             foreach (var action in selectedUnit.GetActions())
             {
                 if (action is AttackAction attackAction && action.CanExecute(selectedUnit))
@@ -141,7 +155,7 @@ namespace Tactics2D
                 }
             }
 
-            turnManager.EndTurn();
+            turnManager.UnitEndedTurn(unitThatAttacked);
             ClearSelection();
         }
 
