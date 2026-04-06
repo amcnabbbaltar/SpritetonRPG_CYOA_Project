@@ -135,6 +135,7 @@ namespace Tactics2D
             var unitThatMoved = selectedUnit;
             yield return StartCoroutine(selectedUnit.MoveAlong(path));
 
+            _actedThisPhase.Add(unitThatMoved);
             turnManager.UnitEndedTurn(unitThatMoved);
             ClearSelection();
         }
@@ -155,6 +156,7 @@ namespace Tactics2D
                 }
             }
 
+            _actedThisPhase.Add(unitThatAttacked);
             turnManager.UnitEndedTurn(unitThatAttacked);
             ClearSelection();
         }

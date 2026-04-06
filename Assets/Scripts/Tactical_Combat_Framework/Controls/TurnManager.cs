@@ -22,12 +22,14 @@ namespace Tactics2D
         private HashSet<Unit> _pendingUnits = new();
 
         private AIController aiController;
+        private PlayerController playerController;
 
         private void Start()
         {
             playerUnits = FindObjectsOfType<Unit>().Where(u => u.Team == Team.Player).ToList();
             enemyUnits  = FindObjectsOfType<Unit>().Where(u => u.Team == Team.Enemy).ToList();
             aiController = FindObjectOfType<AIController>();
+            playerController = FindObjectOfType<PlayerController>();
 
             Debug.Log($"[TurnManager] {playerUnits.Count} players, {enemyUnits.Count} enemies.");
             BeginPlayerPhase();
@@ -106,6 +108,7 @@ namespace Tactics2D
         {
             _pendingUnits = new HashSet<Unit>(playerUnits);
             IsPlayersTurn = true;
+            playerController?.OnPlayerPhaseStart();
             RefreshHUD();
         }
 

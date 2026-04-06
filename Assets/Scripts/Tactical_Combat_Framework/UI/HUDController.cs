@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,6 +29,10 @@ namespace Tactics2D
         [SerializeField] private GameObject unitInfoPanel;
         [SerializeField] private TMP_Text unitNameText;
         [SerializeField] private TMP_Text unitStatsText;
+
+        [Header("Objectives")]
+        [SerializeField] private GameObject objectivePanel;
+        [SerializeField] private TMP_Text objectiveText;
 
         [Header("End Turn Button")]
         [SerializeField] private Button endTurnButton;
@@ -110,6 +115,26 @@ namespace Tactics2D
                     $"HP:  {unit.Stats.currentHP} / {unit.Stats.maxHP}\n" +
                     $"Move: {unit.Stats.maxMove}\n" +
                     $"Atk:  {unit.Stats.attackPower}";
+        }
+
+        // ── Called by ObjectiveManager ─────────────────────────────────────────
+
+        /// <summary>Render the current objective list in the HUD panel.</summary>
+        public void SetObjectives(List<BattleObjective> objectives)
+        {
+            if (objectivePanel == null || objectiveText == null) return;
+
+            objectivePanel.SetActive(objectives != null && objectives.Count > 0);
+
+            if (objectives == null || objectives.Count == 0) return;
+
+            var sb = new System.Text.StringBuilder();
+            foreach (var obj in objectives)
+            {
+                string check = obj.isComplete ? "<color=#00FF88>[✓]</color>" : "[ ]";
+                sb.AppendLine($"{check} {obj.description}");
+            }
+            objectiveText.text = sb.ToString().TrimEnd();
         }
 
         // ── Private helpers ────────────────────────────────────────────────────
