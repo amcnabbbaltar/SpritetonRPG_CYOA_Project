@@ -25,3 +25,7 @@ INCLUDE npc_small_talk.ink
 INCLUDE npc_random_dialogue.ink
 INCLUDE npc_trpg.ink
 INCLUDE town_square_mayor.ink
+INCLUDE town_square_guard.ink
+INCLUDE town_square_joyce.ink
+INCLUDE town_square_aisha.ink
+INCLUDE town_square_ralph.ink

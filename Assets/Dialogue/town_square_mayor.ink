@@ -31,46 +31,76 @@ Then we name one rule for ourselves before we go. What's going to hold our group
 
 * [Listen all the way through before answering.]
     ~ primaryNorm = "listen"
-    # speaker:You
-    Then that's the promise. Nobody gets cut off just because we are in a hurry.
-    # speaker:Aisha
-    Good. Then nobody gets skipped because someone louder is in a hurry.
-    # speaker:Joyce
-    Fine. Just do not let listening turn into stalling.
+    -> norm_listen
 
 * [Clarify what we're doing before we move.]
     ~ primaryNorm = "clarify"
-    # speaker:You
-    Then we slow down long enough to name the thing we're doing before we rush it.
-    # speaker:Ralph
-    Good. If I know what the job is, I can stay with it. My side ideas are rarely an improvement.
-    # speaker:Aisha
-    That keeps us from solving the wrong problem.
+    -> norm_clarify
 
 * [Ask for help before somebody gets stranded alone.]
     ~ primaryNorm = "help"
-    # speaker:You
-    Then we ask early, not after somebody is already in trouble.
-    # speaker:Joyce
-    Ask fast, then. Not after somebody freezes up.
-    # speaker:Ralph
-    That seems kinder on everyone.
+    -> norm_help
 
 * [Call problems out without turning on each other.]
     ~ primaryNorm = "respect"
-    # speaker:You
-    Then we say what is wrong without making the person next to us the enemy.
-    # speaker:Joyce
-    Good. Hit the problem. Not the person.
-    # speaker:Aisha
-    That keeps the conversation useful.
-
-- -> Start_Lead
+    -> norm_respect
 
 = alreadyLeft
 # speaker:Mayor
 Good luck out there. Linus is counting on you.
 -> END
+
+
+=== norm_listen ===
+# speaker:You
+Then that's the promise. Nobody gets cut off just because we are in a hurry.
+
+# speaker:Aisha
+Good. Then nobody gets skipped because someone louder is in a hurry.
+
+# speaker:Joyce
+Fine. Just do not let listening turn into stalling.
+
+-> Start_Lead
+
+
+=== norm_clarify ===
+# speaker:You
+Then we slow down long enough to name the thing we're doing before we rush it.
+
+# speaker:Ralph
+Good. If I know what the job is, I can stay with it. My side ideas are rarely an improvement.
+
+# speaker:Aisha
+That keeps us from solving the wrong problem.
+
+-> Start_Lead
+
+
+=== norm_help ===
+# speaker:You
+Then we ask early, not after somebody is already in trouble.
+
+# speaker:Joyce
+Ask fast, then. Not after somebody freezes up.
+
+# speaker:Ralph
+That seems kinder on everyone.
+
+-> Start_Lead
+
+
+=== norm_respect ===
+# speaker:You
+Then we say what is wrong without making the person next to us the enemy.
+
+# speaker:Joyce
+Good. Hit the problem. Not the person.
+
+# speaker:Aisha
+That keeps the conversation useful.
+
+-> Start_Lead
 
 
 === Start_Lead ===
@@ -84,27 +114,43 @@ Or we can just work it out together as we go along.
 
 * [Keep leadership shared.]
     ~ leadStyle = "shared"
-    # speaker:You
-    We keep it shared unless we start tripping over each other. Aisha speaks up if she sees a risk. Joyce makes the call if we stall. Ralph, if you get lost, say it.
-    # speaker:Joyce
-    Fine. If I call it, nobody waits.
-    # speaker:Aisha
-    Good. Then everybody knows what each person needs to do.
-    # speaker:Ralph
-    I can do that. Specific is good for me.
+    -> lead_shared
 
 * [Let Joyce take point.]
     ~ leadStyle = "joyce"
-    # speaker:You
-    You take point when the pressure spikes. Aisha speaks up if she sees a risk. Ralph, if you get lost, say it.
-    # speaker:Joyce
-    Good. That keeps us moving.
-    # speaker:Aisha
-    Then I speak the second I see the wrong turn.
-    # speaker:Ralph
-    That actually helps. Unsupervised Ralph has a poor record.
+    -> lead_joyce
 
-- -> Start_Depart
+
+=== lead_shared ===
+# speaker:You
+We keep it shared unless we start tripping over each other. Aisha speaks up if she sees a risk. Joyce makes the call if we stall. Ralph, if you get lost, say it.
+
+# speaker:Joyce
+Fine. If I call it, nobody waits.
+
+# speaker:Aisha
+Good. Then everybody knows what each person needs to do.
+
+# speaker:Ralph
+I can do that. Specific is good for me.
+
+-> Start_Depart
+
+
+=== lead_joyce ===
+# speaker:You
+You take point when the pressure spikes. Aisha speaks up if she sees a risk. Ralph, if you get lost, say it.
+
+# speaker:Joyce
+Good. That keeps us moving.
+
+# speaker:Aisha
+Then I speak the second I see the wrong turn.
+
+# speaker:Ralph
+That actually helps. Unsupervised Ralph has a poor record.
+
+-> Start_Depart
 
 
 === Start_Depart ===
