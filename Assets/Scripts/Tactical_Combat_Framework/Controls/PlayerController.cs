@@ -55,13 +55,23 @@ namespace Tactics2D
                 if (clickedCell.Occupant != null && clickedCell.Occupant.Team == Team.Player)
                 {
                     SelectUnit(clickedCell.Occupant);
-                    selectedUnit.GetComponent<AllyDetector>().FindAllies(); // Detecting allies nearby player clicked on
+                    selectedUnit.GetComponent<AllyDetector>()?.FindAllies();
 
+                }
+                // Talk to a nearby Neutral unit with dialogue
+                else if (selectedUnit != null &&
+                         clickedCell.Occupant != null &&
+                         clickedCell.Occupant.Team == Team.Neutral &&
+                         !string.IsNullOrEmpty(clickedCell.Occupant.DialogueKnotName) &&
+                         IsAdjacent(selectedUnit.CurrentCell, clickedCell))
+                {
+                    TriggerUnitDialogue(clickedCell.Occupant);
                 }
                 // Attack an enemy
                 else if (selectedUnit != null &&
                          clickedCell.Occupant != null &&
-                         clickedCell.Occupant.Team != selectedUnit.Team)
+                         clickedCell.Occupant.Team != selectedUnit.Team &&
+                         clickedCell.Occupant.Team != Team.Neutral)
                 {
                     StartCoroutine(PerformAttack(clickedCell.Occupant));
 
@@ -173,6 +183,24 @@ namespace Tactics2D
         {
             Vector3 world = mainCamera.ScreenToWorldPoint(Input.mousePosition);
             return grid.CellFromWorld(world);
+        }
+
+        private bool IsAdjacent(GridCell a, GridCell b)
+        {
+            int dx = Mathf.Abs(a.GridPos.x - b.GridPos.x);
+            int dy = Mathf.Abs(a.GridPos.y - b.GridPos.y);
+            return dx + dy == 1;
+        }
+
+        private void TriggerUnitDialogue(Unit unit)
+        {
+            ClearSelection();
+            if (GameEventsManager.instance == null)
+            {
+                Debug.LogError("[PlayerController] GameEventsManager not found in scene. Add it (with DialogueManager and DialoguePanelUI) to the TRPG scene.");
+                return;
+            }
+            GameEventsManager.instance.dialogueEvents.EnterDialogue(unit.DialogueKnotName);
         }
         #endregion
     }

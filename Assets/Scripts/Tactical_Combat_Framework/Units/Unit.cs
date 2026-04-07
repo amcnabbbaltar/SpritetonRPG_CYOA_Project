@@ -10,6 +10,10 @@ namespace Tactics2D
         [SerializeField] private UnitStats stats;
         [SerializeField] private List<ScriptableObject> actionAssets;
 
+        [Header("Dialogue")]
+        [SerializeField] private string dialogueKnotName;
+        public string DialogueKnotName => dialogueKnotName;
+
         private readonly List<IUnitAction> actions = new();
 
         [Header("References")]

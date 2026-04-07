@@ -140,7 +140,7 @@ public class DialogueManager : MonoBehaviour
             }
             else 
             {
-                GameEventsManager.instance.dialogueEvents.DisplayDialogue(dialogueLine, story.currentChoices);
+                GameEventsManager.instance.dialogueEvents.DisplayDialogue(dialogueLine, story.currentTags, story.currentChoices);
             }
         }
         else if (story.currentChoices.Count == 0)

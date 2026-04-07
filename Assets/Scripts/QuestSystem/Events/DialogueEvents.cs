@@ -33,12 +33,12 @@ public class DialogueEvents
         }
     }
 
-    public event Action<string, List<Choice>> onDisplayDialogue;
-    public void DisplayDialogue(string dialogueLine, List<Choice> dialogueChoices) 
+    public event Action<string, List<string>, List<Choice>> onDisplayDialogue;
+    public void DisplayDialogue(string dialogueLine, List<string> tags, List<Choice> dialogueChoices)
     {
-        if (onDisplayDialogue != null) 
+        if (onDisplayDialogue != null)
         {
-            onDisplayDialogue(dialogueLine, dialogueChoices);
+            onDisplayDialogue(dialogueLine, tags, dialogueChoices);
         }
     }
 

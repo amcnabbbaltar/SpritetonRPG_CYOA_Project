@@ -8,6 +8,7 @@ public class DialoguePanelUI : MonoBehaviour
 {
     [Header("Components")]
     [SerializeField] private GameObject contentParent;
+    [SerializeField] private TextMeshProUGUI speakerText;
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private DialogueChoiceButton[] choiceButtons;
 
@@ -44,9 +45,18 @@ public class DialoguePanelUI : MonoBehaviour
         ResetPanel();
     }
 
-    private void DisplayDialogue(string dialogueLine, List<Choice> dialogueChoices)
+    private void DisplayDialogue(string dialogueLine, List<string> tags, List<Choice> dialogueChoices)
     {
         dialogueText.text = dialogueLine;
+
+        string speaker = "";
+        foreach (string tag in tags)
+        {
+            if (tag.StartsWith("speaker:"))
+                speaker = tag.Substring("speaker:".Length).Trim();
+        }
+        if (speakerText != null)
+            speakerText.text = speaker;
 
         // defensive check - if there are more choices coming in than we can support, log an error
         if (dialogueChoices.Count > choiceButtons.Length) 
@@ -86,5 +96,7 @@ public class DialoguePanelUI : MonoBehaviour
     private void ResetPanel()
     {
         dialogueText.text = "";
+        if (speakerText != null)
+            speakerText.text = "";
     }
 }

@@ -103,7 +103,7 @@ namespace Tactics2D
             foreach (var cell in grid.Cells.Values)
             {
                 var occ = cell.Occupant;
-                if (occ != null && occ.Team != unit.Team)
+                if (occ != null && occ.Team != unit.Team && occ.Team != Team.Neutral)
                 {
                     int dist = Mathf.Abs(cell.GridPos.x - unit.CurrentCell.GridPos.x) +
                                Mathf.Abs(cell.GridPos.y - unit.CurrentCell.GridPos.y);
