@@ -16,6 +16,9 @@ public class QuestPoint : MonoBehaviour
     [SerializeField] private bool finishPoint = true;
     [SerializeField] private bool requireProximity = true; // optional toggle for requiring player near
 
+    [Header("Interaction Prompt")]
+    [SerializeField] private InteractionPromptUI interactionPrompt;
+
     private bool playerIsNear = false;
     private string questId;
     private QuestState currentQuestState;
@@ -38,12 +41,28 @@ public class QuestPoint : MonoBehaviour
     {
         GameEventsManager.instance.questEvents.onQuestStateChange += QuestStateChange;
         GameEventsManager.instance.inputEvents.onSubmitPressed += SubmitPressed;
+        GameEventsManager.instance.dialogueEvents.onDialogueStarted += OnDialogueStarted;
+        GameEventsManager.instance.dialogueEvents.onDialogueFinished += OnDialogueFinished;
     }
 
     private void OnDisable()
     {
         GameEventsManager.instance.questEvents.onQuestStateChange -= QuestStateChange;
         GameEventsManager.instance.inputEvents.onSubmitPressed -= SubmitPressed;
+        GameEventsManager.instance.dialogueEvents.onDialogueStarted -= OnDialogueStarted;
+        GameEventsManager.instance.dialogueEvents.onDialogueFinished -= OnDialogueFinished;
+    }
+
+    private void OnDialogueStarted()
+    {
+        if (interactionPrompt != null)
+            interactionPrompt.Hide();
+    }
+
+    private void OnDialogueFinished()
+    {
+        if (playerIsNear && interactionPrompt != null)
+            interactionPrompt.Show();
     }
 
     private void Update()
@@ -110,6 +129,8 @@ public class QuestPoint : MonoBehaviour
         if (otherCollider.CompareTag("Player"))
         {
             playerIsNear = true;
+            if (interactionPrompt != null)
+                interactionPrompt.Show();
         }
     }
 
@@ -118,6 +139,8 @@ public class QuestPoint : MonoBehaviour
         if (otherCollider.CompareTag("Player"))
         {
             playerIsNear = false;
+            if (interactionPrompt != null)
+                interactionPrompt.Hide();
         }
     }
 }
