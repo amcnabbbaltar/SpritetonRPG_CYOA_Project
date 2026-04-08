@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 5
   m_Sprite: {fileID: -1066386698, guid: 62293b77471236146a6e2dc58e35eaf9, type: 3}
-  m_Color: {r: 0.043137226, g: 0.23038848, b: 0.98039216, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -100,6 +100,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stats: {fileID: 0}
   actionAssets: []
+  dialogueKnotName: 
   spriteRenderer: {fileID: 0}
 --- !u!95 &-314777550076906890
 Animator:
