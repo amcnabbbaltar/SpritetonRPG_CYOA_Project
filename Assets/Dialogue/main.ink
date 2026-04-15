@@ -17,6 +17,15 @@ VAR npcSmallTalk_State = "REQUIREMENTS_NOT_MET"
 // spriteton story variables
 VAR primaryNorm = ""
 VAR leadStyle = ""
+VAR timeState = "on_track"
+VAR trustState = "steady"
+VAR roadApproach = ""
+VAR ralphRepair = ""
+VAR aishaHeard = false
+VAR gateApproach = ""
+VAR bridgeApproach = ""
+VAR outcomeBand = "mixed"
+VAR reflectionFocus = ""
 
 // ink files
 INCLUDE collect_coins_start_npc.ink
@@ -29,3 +38,8 @@ INCLUDE town_square_guard.ink
 INCLUDE town_square_joyce.ink
 INCLUDE town_square_aisha.ink
 INCLUDE town_square_ralph.ink
+INCLUDE spriteton_roadblock.ink
+INCLUDE spriteton_shrine.ink
+INCLUDE spriteton_lab.ink
+INCLUDE spriteton_bridge.ink
+INCLUDE spriteton_delivery.ink

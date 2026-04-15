@@ -104,8 +104,6 @@ That keeps the conversation useful.
 
 
 === Start_Lead ===
-The east road to the shrine is open. Nobody expects another calm pause once you take it.
-
 # speaker:Joyce
 Do we want one team leader? I can do it, but all of you will have to listen when things start going wrong.
 
@@ -154,14 +152,7 @@ That actually helps. Unsupervised Ralph has a poor record.
 
 
 === Start_Depart ===
-{ leadStyle == "joyce":
-    Joyce takes the front without another word. Aisha watches the edges. Ralph stays close enough to hear every call.
-- else:
-    Joyce still leans forward, but the group stays together around her. Aisha watches the edges. Ralph stays close enough to speak if he gets lost.
-}
-
 # speaker:Mayor
 Good luck! Linus is counting on you.
 
-~ FinishQuest(SpiretonMainQuestId)
--> END
+-> Scene_RoadBlock
