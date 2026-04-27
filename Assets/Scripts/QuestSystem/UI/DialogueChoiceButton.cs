@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
@@ -26,6 +27,16 @@ public class DialogueChoiceButton : MonoBehaviour, ISelectHandler
     public void SelectButton()
     {
         button.Select();
+    }
+
+    public void AddOnClickListener(UnityAction action)
+    {
+        button.onClick.AddListener(action);
+    }
+
+    public void ClearOnClickListeners()
+    {
+        button.onClick.RemoveAllListeners();
     }
 
     public void OnSelect(BaseEventData eventData)
