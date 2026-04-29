@@ -7,6 +7,8 @@ public class QuestPoint : MonoBehaviour
 {
     [Header("Dialogue (optional)")]
     [SerializeField] private string dialogueKnotName;
+    [SerializeField] private bool destroyAfterDialogue = false;
+    [SerializeField] private string destroyOnKnotName = "";
 
     [Header("Quest")]
     [SerializeField] private QuestInfoSO questInfoForPoint;
@@ -132,7 +134,8 @@ public class QuestPoint : MonoBehaviour
         if (quest.info.id.Equals(questId))
         {
             currentQuestState = quest.state;
-            questIcon.SetState(currentQuestState, startPoint, finishPoint);
+            if (questIcon != null)
+                questIcon.SetState(currentQuestState, startPoint, finishPoint);
         }
     }
 

@@ -42,6 +42,10 @@ What kind of team shows up here?
     -> roadblock_already_resolved
 }
 
+{ not examined_wheel || not examined_crate:
+    -> roadblock_resolve_blocked
+}
+
 * [Ask each of them what they need before anyone touches the cart.]
     ~ roadApproach = "listen_first"
     { spokeTo_Quin && spokeTo_Liora:
@@ -56,6 +60,21 @@ What kind of team shows up here?
 
 = roadblock_already_resolved
 The lane is already clear. Keep moving.
+-> END
+
+= roadblock_resolve_blocked
+{ not examined_wheel && not examined_crate:
+    # speaker:Aisha
+    We need to look at the wheel and get that crate secured before anyone touches this cart.
+- else:
+    { not examined_wheel:
+        # speaker:Aisha
+        The wheel is still jammed. Figure out how to free it before we move anything.
+    - else:
+        # speaker:Aisha
+        That crate is not going anywhere on its own. Get it sorted first.
+    }
+}
 -> END
 
 
@@ -96,6 +115,8 @@ Thank you for not making this uglier.
 
 ~ roadBlockResolved = true
 ~ AdvanceQuest(SpiretonMainQuestId)
+~ SwitchScene("TRPG_Exemple")
+-> END
 
 === roadblock_listen_informed ===
 # speaker:You
@@ -130,8 +151,7 @@ Thank you for not making this uglier.
 ~ roadBlockResolved = true
 ~ AdvanceQuest(SpiretonMainQuestId)
 ~ SwitchScene("TRPG_Exemple")
-
-
+-> END
 
 === roadblock_quick_call ===
 # speaker:You
@@ -167,6 +187,7 @@ It will hold for now. I am coming back with tools tomorrow.
 ~ trustState = "strained"
 ~ AdvanceQuest(SpiretonMainQuestId)
 ~ SwitchScene("TRPG_Exemple")
+-> END
 
 
 === roadblock_wheel ===
