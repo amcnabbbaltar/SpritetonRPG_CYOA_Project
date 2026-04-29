@@ -18,6 +18,15 @@ VAR npcSmallTalk_State = "REQUIREMENTS_NOT_MET"
 VAR primaryNorm = ""
 VAR leadStyle = ""
 
+// road block scene variables
+VAR roadApproach = ""
+VAR trustState = ""
+VAR roadBlockResolved = false
+VAR spokeTo_Quin = false
+VAR spokeTo_Liora = false
+VAR examined_wheel = false
+VAR examined_crate = false
+
 // ink files
 INCLUDE collect_coins_start_npc.ink
 INCLUDE collect_coins_finish_npc.ink
@@ -29,3 +38,8 @@ INCLUDE town_square_guard.ink
 INCLUDE town_square_joyce.ink
 INCLUDE town_square_aisha.ink
 INCLUDE town_square_ralph.ink
+INCLUDE road_block_scene.ink
+INCLUDE road_block_quin.ink
+INCLUDE road_block_liora.ink
+INCLUDE road_block_joyce.ink
+INCLUDE road_block_aisha.ink
