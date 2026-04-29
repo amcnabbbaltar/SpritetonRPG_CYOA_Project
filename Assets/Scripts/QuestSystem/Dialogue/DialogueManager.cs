@@ -19,6 +19,7 @@ public class DialogueManager : MonoBehaviour
     private void Awake() 
     {
         story = new Story(inkJson.text);
+        story.allowExternalFunctionFallbacks = true;
         inkExternalFunctions = new InkExternalFunctions();
         inkExternalFunctions.Bind(story);
         inkDialogueVariables = new InkDialogueVariables(story);

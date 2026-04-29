@@ -43,11 +43,20 @@ public class DialogueEvents
     }
 
     public event Action<int> onUpdateChoiceIndex;
-    public void UpdateChoiceIndex(int choiceIndex) 
+    public void UpdateChoiceIndex(int choiceIndex)
     {
-        if (onUpdateChoiceIndex != null) 
+        if (onUpdateChoiceIndex != null)
         {
             onUpdateChoiceIndex(choiceIndex);
+        }
+    }
+
+    public event Action onDestroyNPC;
+    public void DestroyNPC()
+    {
+        if (onDestroyNPC != null)
+        {
+            onDestroyNPC();
         }
     }
 

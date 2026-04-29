@@ -221,11 +221,16 @@ Quin was not wrong about the timing. This load is not going to wait.
 * [This explains why Quin is so tense.]
     # speaker:You
     Timed delivery. He does not have room to lose an hour.
-    -> END
+    ->roadblock_crate_detroy
 
 * [Good to know.]
     -> END
 
-= roadblock_crate_revisit
+
+===roadblock_crate_revisit ===
 Grain and a market seal. You already know what is at stake for Quin.
 -> END
+
+=== roadblock_crate_detroy ===
+~ DestroyNPC()
+->END

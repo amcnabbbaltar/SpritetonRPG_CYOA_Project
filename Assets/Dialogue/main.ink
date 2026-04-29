@@ -3,6 +3,7 @@ EXTERNAL StartQuest(questId)
 EXTERNAL AdvanceQuest(questId)
 EXTERNAL FinishQuest(questId)
 EXTERNAL SwitchScene(sceneName)
+EXTERNAL DestroyNPC()
 
 // quest ids (questId + "Id" for variable name)
 VAR CollectCoinsQuestId = "CollectCoinsQuest"

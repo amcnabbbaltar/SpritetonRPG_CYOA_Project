@@ -13,6 +13,7 @@ public class InkExternalFunctions
         story.BindExternalFunction("AdvanceQuest", (string questId) => AdvanceQuest(questId));
         story.BindExternalFunction("FinishQuest", (string questId) => FinishQuest(questId));
         story.BindExternalFunction("SwitchScene", (string sceneName) => SwitchScene(sceneName));
+        story.BindExternalFunction("DestroyNPC", () => DestroyNPC());
 
     }
 
@@ -22,6 +23,7 @@ public class InkExternalFunctions
         story.UnbindExternalFunction("AdvanceQuest");
         story.UnbindExternalFunction("FinishQuest");
         story.UnbindExternalFunction("SwitchScene");
+        story.UnbindExternalFunction("DestroyNPC");
     }
 
     private void StartQuest(string questId) 
@@ -42,5 +44,10 @@ public class InkExternalFunctions
     {
         Debug.Log("[Ink] Switching scene to: " + sceneName);
         SceneManager.LoadScene(sceneName);
+    }
+
+    private void DestroyNPC()
+    {
+        GameEventsManager.instance.dialogueEvents.DestroyNPC();
     }
 }

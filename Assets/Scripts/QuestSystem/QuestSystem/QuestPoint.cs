@@ -20,6 +20,7 @@ public class QuestPoint : MonoBehaviour
     [SerializeField] private InteractionPromptUI interactionPrompt;
 
     private bool playerIsNear = false;
+    private bool initiatedDialogue = false;
     private string questId;
     private QuestState currentQuestState;
 
@@ -43,6 +44,7 @@ public class QuestPoint : MonoBehaviour
         GameEventsManager.instance.inputEvents.onSubmitPressed += SubmitPressed;
         GameEventsManager.instance.dialogueEvents.onDialogueStarted += OnDialogueStarted;
         GameEventsManager.instance.dialogueEvents.onDialogueFinished += OnDialogueFinished;
+        GameEventsManager.instance.dialogueEvents.onDestroyNPC += OnDestroyNPC;
     }
 
     private void OnDisable()
@@ -51,6 +53,7 @@ public class QuestPoint : MonoBehaviour
         GameEventsManager.instance.inputEvents.onSubmitPressed -= SubmitPressed;
         GameEventsManager.instance.dialogueEvents.onDialogueStarted -= OnDialogueStarted;
         GameEventsManager.instance.dialogueEvents.onDialogueFinished -= OnDialogueFinished;
+        GameEventsManager.instance.dialogueEvents.onDestroyNPC -= OnDestroyNPC;
     }
 
     private void OnDialogueStarted()
@@ -59,8 +62,16 @@ public class QuestPoint : MonoBehaviour
             interactionPrompt.Hide();
     }
 
+    private void OnDestroyNPC()
+    {
+        if (initiatedDialogue)
+            Destroy(gameObject);
+    }
+
     private void OnDialogueFinished()
     {
+        initiatedDialogue = false;
+
         if (playerIsNear && interactionPrompt != null)
             interactionPrompt.Show();
     }
@@ -99,6 +110,8 @@ public class QuestPoint : MonoBehaviour
         // If a dialogue is assigned, start it
         if (!string.IsNullOrEmpty(dialogueKnotName))
         {
+            initiatedDialogue = true;
+            correctKnotReached = false;
             GameEventsManager.instance.dialogueEvents.EnterDialogue(dialogueKnotName);
             return;
         }
