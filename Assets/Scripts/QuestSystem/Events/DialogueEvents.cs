@@ -51,6 +51,7 @@ public class DialogueEvents
         }
     }
 
+
     public event Action onDestroyNPC;
     public void DestroyNPC()
     {
