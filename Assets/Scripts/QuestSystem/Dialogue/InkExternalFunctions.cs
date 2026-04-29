@@ -14,7 +14,6 @@ public class InkExternalFunctions
         story.BindExternalFunction("FinishQuest", (string questId) => FinishQuest(questId));
         story.BindExternalFunction("SwitchScene", (string sceneName) => SwitchScene(sceneName));
         story.BindExternalFunction("DestroyNPC", () => DestroyNPC());
-
     }
 
     public void Unbind(Story story)

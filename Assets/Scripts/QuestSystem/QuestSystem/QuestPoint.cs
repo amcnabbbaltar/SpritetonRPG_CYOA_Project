@@ -111,7 +111,6 @@ public class QuestPoint : MonoBehaviour
         if (!string.IsNullOrEmpty(dialogueKnotName))
         {
             initiatedDialogue = true;
-            correctKnotReached = false;
             GameEventsManager.instance.dialogueEvents.EnterDialogue(dialogueKnotName);
             return;
         }
