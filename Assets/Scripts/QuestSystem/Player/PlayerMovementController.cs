@@ -14,6 +14,7 @@ public class PlayerContinuousGridMovement : MonoBehaviour
 
     private bool isWalking = false;
     private bool movementDisabled = false;
+    private bool isActiveCharacter = false;
 
     private Vector2 inputDir = Vector2.zero;
     private Vector2 moveTarget;
@@ -43,12 +44,24 @@ public class PlayerContinuousGridMovement : MonoBehaviour
         GameEventsManager.instance.playerEvents.onEnablePlayerMovement -= EnablePlayerMovement;
     }
 
+    public void SetActiveCharacter(bool active)
+    {
+        isActiveCharacter = active;
+        if (!active)
+        {
+            inputDir = Vector2.zero;
+            hasMouseTarget = false;
+            isWalking = false;
+            if (animator != null) animator.SetBool("isWalking", false);
+        }
+    }
+
     private void DisablePlayerMovement() => movementDisabled = true;
     private void EnablePlayerMovement() => movementDisabled = false;
 
     private void Update()
     {
-        if (movementDisabled) return;
+        if (!isActiveCharacter || movementDisabled) return;
 
         HandleKeyboardInput();
         HandleMouseClick();
@@ -57,7 +70,7 @@ public class PlayerContinuousGridMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (movementDisabled) return;
+        if (!isActiveCharacter || movementDisabled) return;
 
         Vector2 currentPos = rb.position;
         Vector2 nextPos = currentPos;

@@ -5,6 +5,18 @@ EXTERNAL FinishQuest(questId)
 EXTERNAL SwitchScene(sceneName)
 EXTERNAL DestroyNPC()
 
+// ink fallbacks used by InkPlayerWindow when C# bindings are absent
+=== function StartQuest(questId) ===
+~ return
+=== function AdvanceQuest(questId) ===
+~ return
+=== function FinishQuest(questId) ===
+~ return
+=== function SwitchScene(sceneName) ===
+~ return
+=== function DestroyNPC() ===
+~ return
+
 // quest ids (questId + "Id" for variable name)
 VAR CollectCoinsQuestId = "CollectCoinsQuest"
 VAR SpiretonMainQuestId = "SpiretonMainQuest"
