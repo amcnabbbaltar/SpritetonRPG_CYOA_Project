@@ -101,7 +101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcea1ff6227e61441acb151dd4b66095, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stats: {fileID: 0}
+  stats: {fileID: 11400000, guid: 6f90e63425cf3cf48b4f94538d7d04cc, type: 2}
   actionAssets: []
   dialogueKnotName: 
   spriteRenderer: {fileID: 0}
@@ -174,10 +174,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueKnotName: ralph_dialogue
+  destroyAfterDialogue: 0
+  destroyOnKnotName: 
   questInfoForPoint: {fileID: 11400000, guid: 0547cc842503e114ba8b1dcf2a918b13, type: 2}
   startPoint: 0
   finishPoint: 0
   requireProximity: 1
+  interactionPrompt: {fileID: 0}
 --- !u!70 &1201611850844688915
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
